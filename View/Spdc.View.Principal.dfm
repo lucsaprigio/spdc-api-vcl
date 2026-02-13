@@ -19,10 +19,6 @@ object frm_view_principal: Tfrm_view_principal
     Height = 441
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 224
-    ExplicitTop = 200
-    ExplicitWidth = 185
-    ExplicitHeight = 41
     object memLog: TMemo
       Left = 0
       Top = 0
