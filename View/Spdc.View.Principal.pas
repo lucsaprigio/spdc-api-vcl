@@ -6,15 +6,16 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Spdc.Controller.Connection, Horse, Horse.Jhonson;
+  Spdc.Infra.Connection, Horse, Horse.Jhonson, FireDAC.Comp.Client,
+  Spdc.Router.Auth, Infra.HorseServer ;
 
 type
   Tfrm_view_principal = class(TForm)
     pnlContainer: TPanel;
     memLog: TMemo;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
-    procedure StartServer;
   public
     { Public declarations }
   end;
@@ -25,46 +26,32 @@ var
 implementation
 
 uses
-  FireDAC.Comp.Client, Spdc.Router.Usuario;
+  Spdc.Router.Usuario, Spdc.Utils.Configuracao;
 
 {$R *.dfm}
 
 procedure Tfrm_view_principal.FormCreate(Sender: TObject);
 begin
-  Spdc.Router.Usuario.Registry;
+
+  TSession.LoadJWT;
+  TAppConfig.CarregarIni;
 
   TThread.CreateAnonymousThread(
-    procedure
-    begin
-      StartServer;
-    end).Start;
+  procedure
+  begin
+    TServerHorse.Start(9000,
+    procedure(const AMsg : string) begin
+      TThread.Synchronize(nil, procedure
+      begin
+         memLog.Lines.Add(AMsg);
+      end);
+    end);
+  end).Start;
 end;
 
-procedure Tfrm_view_principal.StartServer;
+procedure Tfrm_view_principal.FormDestroy(Sender: TObject);
 begin
-try
-    THorse.Use(Jhonson);
-    THorse.Listen(9000,
-      procedure
-      begin
-        TThread.Synchronize(nil,
-          procedure
-          begin
-            memLog.Lines.Add(FormatDateTime('[hh:nn:ss] ', Now) +
-              'Servidor Online na porta 9000');
-          end);
-      end);
-
-  except
-    on E: Exception do
-    begin
-      TThread.Synchronize(nil,
-        procedure
-        begin
-          memLog.Lines.Add('Erro ao iniciar: ' + E.Message);
-        end);
-    end;
-  end;
+    TServerHorse.Stop;
 end;
 
 end.

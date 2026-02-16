@@ -1,4 +1,4 @@
-unit Spdc.Controller.Connection;
+unit Spdc.Infra.Connection;
 
 interface
 
@@ -20,12 +20,13 @@ type
   TControllerConection = class(TInterfacedObject, IControllerConnection)
   private
     FConnection: TFDConnection;
+    FDatabasePath : String;
     procedure ConfigurarConexao;
   public
-    constructor Create;
+    constructor Create(const ADatabasePath : String = ''); // Vou usar 2 bancos, então vou colocar um parâmetro opcional
     destructor destroy; override;
 
-    class function New: IControllerConnection;
+    class function New(const ADatabasePath : String = ''): IControllerConnection; // Preciso colocar no new pois é onde eu faço instancio a classe.
 
     function GetConnection: TFDConnection;
     function Connect: IControllerConnection;
@@ -36,9 +37,13 @@ implementation
 
 { TControllerConection }
 
-constructor TControllerConection.Create;
+uses Spdc.Utils.Configuracao;
+
+constructor TControllerConection.Create(const ADatabasePath : String = '');
 begin
-  FConnection := TFDConnection.Create(nil);
+  // No Constructor é onde vamos fazer a criação de conexão neste caso de Banco.
+  FConnection   := TFDConnection.Create(nil);
+  FDatabasePath := ADatabasePath;
   ConfigurarConexao;
 end;
 
@@ -48,9 +53,9 @@ begin
   inherited;
 end;
 
-class function TControllerConection.New: IControllerConnection;
+class function TControllerConection.New(const ADatabasePath : String = ''): IControllerConnection;
 begin
-  Result := Self.Create;
+  Result := Self.Create(ADatabasePath);
 end;
 
 procedure TControllerConection.ConfigurarConexao;
@@ -58,25 +63,27 @@ begin
   // Colocar no INI
   with FConnection do
   begin
-    Connected                  := False;
+    Connected := False;
     Params.Clear;
 
-    Params.DriverID            := 'FB';
-    Params.Values['Protocol']  := 'TCPIP';
-    Params.Values['Port']      := '3050';
-    Params.Values['Server']    := '192.168.0.85';
+    Params.DriverID           := 'FB';
+    Params.Values['Protocol'] := 'TCPIP';
+    Params.Values['Port']     := TAppConfig.Port;
+    Params.Values['Server']   := TAppConfig.Server;
 
-    Params.Database            := '/database/gc/spdc/spdc.fdb';
-    Params.UserName            := 'SYSDBA';
-    Params.Password            := 'masterkey';
+    if Trim(FDatabasePath) = '' then
+      Params.Database           := TAppConfig.DBSpdc
+    else
+      Params.Database           := FDatabasePath;
+
+    Params.UserName           := TAppConfig.DBUser;
+    Params.Password           := TAppConfig.DBPassword;
 
     // Configurações importantes para performance
-    LoginPrompt := False;
+    LoginPrompt                := False;
+    ResourceOptions.SilentMode := True;
 
-    Params.Values['LoginTimeout']   := '5';
-    Params.Values['ConnectTimeout'] := '5';
-
-     ResourceOptions.AutoConnect := True; // Para o TTask
+    ResourceOptions.AutoConnect := True; // Para o TTask
   end;
 end;
 
@@ -85,13 +92,15 @@ begin
   Result := Self;
 
   try
-    if not FConnection.Connected then begin
+    if not FConnection.Connected then
+    begin
       FConnection.Connected := True;
     end;
   except
     on E: Exception do
     begin
-      raise Exception.Create('Erro fatal ao conectar no banco de dados: ' + E.Message);
+      raise Exception.Create('Erro fatal ao conectar no banco de dados: ' +
+        E.Message);
     end;
   end;
 end;

@@ -4,7 +4,7 @@ interface
 
 uses
   System.JSON, FIREDAC.Comp.Client, System.SysUtils,
-  Spdc.Controller.Connection, DataSet.Serialize;
+  Spdc.Infra.Connection, DataSet.Serialize;
 
 type
   TModelUsuario = class
