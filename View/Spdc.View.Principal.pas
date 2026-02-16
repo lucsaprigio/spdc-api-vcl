@@ -7,7 +7,9 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   Spdc.Infra.Connection, Horse, Horse.Jhonson, FireDAC.Comp.Client,
-  Spdc.Router.Auth, Infra.HorseServer ;
+  Spdc.Router.Auth, Infra.HorseServer, FireDAC.UI.Intf, FireDAC.Stan.Async,
+  FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util, FireDAC.Stan.Intf,
+  FireDAC.Comp.Script, FireDAC.Phys.MSSQL ;
 
 type
   Tfrm_view_principal = class(TForm)
@@ -33,7 +35,6 @@ uses
 procedure Tfrm_view_principal.FormCreate(Sender: TObject);
 begin
 
-  TSession.LoadJWT;
   TAppConfig.CarregarIni;
 
   TThread.CreateAnonymousThread(

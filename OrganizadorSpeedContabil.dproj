@@ -128,7 +128,6 @@
             <Form>frm_view_principal</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Model\Spdc.Model.Usuario.pas"/>
         <DCCReference Include="Controllers\Spdc.Controller.Usuario.pas"/>
         <DCCReference Include="Routers\Spdc.Router.Usuario.pas"/>
         <DCCReference Include="Utils\Spdc.Utils.Configuracao.pas"/>
@@ -139,6 +138,11 @@
         <DCCReference Include="Infra\Spdc.Infra.Connection.pas"/>
         <DCCReference Include="Infra\Infra.HorseServer.pas"/>
         <DCCReference Include="DTO\Spdc.UserAuth.Response.pas"/>
+        <DCCReference Include="Schemas\Lac.Schema.ScriptExecute.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
+        <DCCReference Include="Model\DAO\Spdc.Model.DAO.Usuario.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.Usuario.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

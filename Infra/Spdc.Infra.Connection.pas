@@ -66,13 +66,19 @@ begin
     Connected := False;
     Params.Clear;
 
-    Params.DriverID           := 'FB';
+    Params.DriverID           := TAppConfig.DriverID;
     Params.Values['Protocol'] := 'TCPIP';
     Params.Values['Port']     := TAppConfig.Port;
     Params.Values['Server']   := TAppConfig.Server;
 
+    if TAppConfig.DriverID = 'MSSQL' then begin
+      Params.Values['OSAuthent']               := 'No'; // Define que usa Usuario e Senha, não o Windows.
+
+      Params.Values['ODBCAdvanced'] := 'Encrypt=yes;TrustServerCertificate=yes;';
+    end;
+
     if Trim(FDatabasePath) = '' then
-      Params.Database           := TAppConfig.DBSpdc
+      Params.Database           := TAppConfig.Database
     else
       Params.Database           := FDatabasePath;
 
