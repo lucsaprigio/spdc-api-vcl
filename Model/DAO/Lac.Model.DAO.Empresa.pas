@@ -7,29 +7,170 @@ uses
 
 type
   TDAOEmpresa = class
-    class procedure CriarEmpresa(aEmpresa : TEmpresa);
+    class procedure CriarEmpresa(aEmpresa: TEmpresa);
+    class function BuscarEmpresaPorCnpj(aCnpj: String): TEmpresa;
+    class function BuscarEmpresaPorID(aID: String): TEmpresa;
+    class procedure AtualizarCertificado(aCnpj: String; aBusiness: TEmpresa);
+    class procedure AtualizarEmpresa(aBusiness: TEmpresa);
   end;
 
 implementation
 
 { TDAOEmpresa }
 
-class procedure TDAOEmpresa.CriarEmpresa(aEmpresa : TEmpresa);
+class procedure TDAOEmpresa.AtualizarCertificado(aCnpj: String; aBusiness: TEmpresa);
 var
-  LConexao : iControllerConnection;
-  LQry     : TFDQuery;
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
 begin
   LConexao := TControllerConection.New;
-  LQry     := TFDQuery.Create(nil);
+  LQry := TFDQuery.Create(nil);
 
   try
-   LQry.Connection := LConexao.GetConnection;
+    LQry.Connection := LConexao.GetConnection;
 
-   LQry.SQL.Text :=
-    'INSERT INTO TB_BUSINESS '+
-    '(BUSINESS_ID, CORPORATE_NAME, FANTASY_NAME, CNPJ, IE, UF, ENVIRONMENT, LAST_NSU, CERT_BASE64, CERT_PASSWORD, CERT_EXPIRATION) '+
-    'VALUES '+
-    '(:BUSINESS_ID, :CORPORATE_NAME, :FANTASY_NAME, :CNPJ, :IE, :UF, :ENVIRONMENT, :LAST_NSU, :CERT_BASE64, :CERT_PASSWORD, :CERT_EXPIRATION) ';
+    LQry.SQL.Text := 'UPDATE TB_BUSINESS SET CERT_BASE64 = :CERT_BASE64, CERT_PASSWORD = :CERT_PASSWORD, ' +
+      ' CERT_EXPIRATION = :CERT_EXPIRATION, UPDATED_AT = GETDATE() WHERE CNPJ = :CNPJ';
+
+    LQry.ParamByName('CNPJ').AsString := aCnpj;
+
+    LQry.ParamByName('CERT_BASE64').AsString := aBusiness.CertBase64;
+    LQry.ParamByName('CERT_PASSWORD').AsString := aBusiness.CertPassword;
+    LQry.ParamByName('CERT_EXPIRATION').AsDate := aBusiness.CertExpiration;
+
+    LQry.ExecSQL;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class procedure TDAOEmpresa.AtualizarEmpresa(aBusiness: TEmpresa);
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := 'UPDATE TB_BUSINESS SET ' + ' CORPORATE_NAME = :CORPORATE_NAME, ' +
+      ' FANTASY_NAME = :FANTASY_NAME, ' + ' CNPJ = :CNPJ, ' + ' IE = :IE, ' + ' UF = :UF, ' +
+      ' ENVIRONMENT = :ENVIRONMENT, ' + ' LAST_NSU = :LAST_NSU, UPDATED_AT = GETDATE() ' +
+      ' WHERE BUSINESS_ID = :BUSINESS_ID ';
+
+    LQry.ParamByName('BUSINESS_ID').AsString := aBusiness.BusinessId;
+
+    LQry.ParamByName('CORPORATE_NAME').AsString := aBusiness.CorporateName;
+    LQry.ParamByName('FANTASY_NAME').AsString := aBusiness.FantasyName;
+    LQry.ParamByName('CNPJ').AsString := aBusiness.Cnpj;
+    LQry.ParamByName('IE').AsString := aBusiness.Ie;
+    LQry.ParamByName('UF').AsString := aBusiness.Uf;
+    LQry.ParamByName('ENVIRONMENT').AsInteger := aBusiness.Environment;
+    LQry.ParamByName('LAST_NSU').AsString := aBusiness.LastNSU;
+
+    LQry.ExecSQL;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class function TDAOEmpresa.BuscarEmpresaPorCnpj(aCnpj: String): TEmpresa;
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  Result := nil;
+
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := ' SELECT BUSINESS_ID ,CORPORATE_NAME ,FANTASY_NAME ,CNPJ ' +
+      ' ,IE ,UF ,ENVIRONMENT ,LAST_NSU ,CERT_BASE64 ,CERT_PASSWORD ,CERT_EXPIRATION FROM TB_BUSINESS ' +
+      ' WHERE CNPJ = :CNPJ';
+
+    LQry.ParamByName('CNPJ').AsString := aCnpj;
+
+    LQry.Open;
+    if not LQry.IsEmpty then
+    begin
+      Result := TEmpresa.Create;
+
+      Result.BusinessId := LQry.FieldByName('BUSINESS_ID').AsString;
+      Result.CorporateName := LQry.FieldByName('CORPORATE_NAME').AsString;
+      Result.FantasyName := LQry.FieldByName('FANTASY_NAME').AsString;
+      Result.Cnpj := LQry.FieldByName('CNPJ').AsString;
+      Result.Ie := LQry.FieldByName('IE').AsString;
+      Result.Uf := LQry.FieldByName('UF').AsString;
+      Result.LastNSU := LQry.FieldByName('LAST_NSU').AsString;
+      Result.CertBase64 := LQry.FieldByName('CERT_BASE64').AsString;
+      Result.CertPassword := LQry.FieldByName('CERT_PASSWORD').AsString;
+      Result.CertExpiration := LQry.FieldByName('CERT_EXPIRATION').AsDateTime;
+    end;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class function TDAOEmpresa.BuscarEmpresaPorID(aID: String): TEmpresa;
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  Result := nil;
+
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := ' SELECT BUSINESS_ID ,CORPORATE_NAME ,FANTASY_NAME ,CNPJ ' +
+      ' ,IE ,UF ,ENVIRONMENT ,LAST_NSU ,CERT_BASE64 ,CERT_PASSWORD ,CERT_EXPIRATION FROM TB_BUSINESS ' +
+      ' WHERE BUSINESS_ID = :ID';
+
+    LQry.ParamByName('ID').AsString := aID;
+
+    LQry.Open;
+    if not LQry.IsEmpty then
+    begin
+      Result := TEmpresa.Create;
+
+      Result.BusinessId := LQry.FieldByName('BUSINESS_ID').AsString;
+      Result.CorporateName := LQry.FieldByName('CORPORATE_NAME').AsString;
+      Result.FantasyName := LQry.FieldByName('FANTASY_NAME').AsString;
+      Result.Cnpj := LQry.FieldByName('CNPJ').AsString;
+      Result.Ie := LQry.FieldByName('IE').AsString;
+      Result.Uf := LQry.FieldByName('UF').AsString;
+      Result.LastNSU := LQry.FieldByName('LAST_NSU').AsString;
+      Result.CertBase64 := LQry.FieldByName('CERT_BASE64').AsString;
+      Result.CertPassword := LQry.FieldByName('CERT_PASSWORD').AsString;
+      Result.CertExpiration := LQry.FieldByName('CERT_EXPIRATION').AsDateTime;
+    end;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class procedure TDAOEmpresa.CriarEmpresa(aEmpresa: TEmpresa);
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := 'INSERT INTO TB_BUSINESS ' +
+      '(BUSINESS_ID, CORPORATE_NAME, FANTASY_NAME, CNPJ, IE, UF, ENVIRONMENT, LAST_NSU, CERT_BASE64, CERT_PASSWORD, CERT_EXPIRATION) '
+      + 'VALUES ' +
+      '(:BUSINESS_ID, :CORPORATE_NAME, :FANTASY_NAME, :CNPJ, :IE, :UF, :ENVIRONMENT, :LAST_NSU, :CERT_BASE64, :CERT_PASSWORD, :CERT_EXPIRATION) ';
 
     LQry.ParamByName('BUSINESS_ID').AsString := aEmpresa.BusinessId;
     LQry.ParamByName('CORPORATE_NAME').AsString := aEmpresa.CorporateName;
@@ -45,7 +186,7 @@ begin
 
     LQry.ExecSQL;
   finally
-   LQry.Free;
+    LQry.Free;
   end;
 end;
 

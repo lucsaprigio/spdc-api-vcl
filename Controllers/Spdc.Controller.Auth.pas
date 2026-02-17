@@ -71,8 +71,11 @@ begin
     begin
       Res.Status(401).Send('Usuário ou Senha inválidos');
     end;
-
+  end
+  else begin
+      Res.Status(401).Send('Usuário ou Senha inválidos');
   end;
+
 end;
 
 end.

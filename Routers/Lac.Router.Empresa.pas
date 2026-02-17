@@ -11,7 +11,10 @@ implementation
 
 procedure Registry;
 begin
+   THorse.Get('/api/business/:id', TControllerEmpresa.GetBusinessByCnpj);
    THorse.Post('/api/business', TControllerEmpresa.PostNewBusiness);
+   THorse.Put('/api/business/:id/certificado', TControllerEmpresa.PutAtualizaCertificado);
+   THorse.Put('/api/business/:id', TControllerEmpresa.PutAtualizarEmpresa);
 end;
 
 end.

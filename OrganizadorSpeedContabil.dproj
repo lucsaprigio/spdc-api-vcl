@@ -149,6 +149,7 @@
         <DCCReference Include="Model\Entities\Model.Entity.Empresa.pas"/>
         <DCCReference Include="Controllers\Lac.Controller.Empresa.pas"/>
         <DCCReference Include="Routers\Lac.Router.Empresa.pas"/>
+        <DCCReference Include="Utils\Lac.Utils.Certificados.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

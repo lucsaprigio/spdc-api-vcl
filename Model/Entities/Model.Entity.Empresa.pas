@@ -23,6 +23,8 @@ type
    public
     constructor Create;
 
+    class function New: TEmpresa;
+
     property BusinessId: String read FBusinessId write SetBusinessId;
     property CorporateName: String read FCorporateName write FCorporateName;
     property FantasyName: String read FFantasyName write FFantasyName;
@@ -43,8 +45,12 @@ implementation
 constructor TEmpresa.Create;
 begin
    inherited Create;
+end;
 
-   FBusinessId := TLacUtils.NewIDString;
+class function TEmpresa.New: TEmpresa;
+begin
+  Result := TEmpresa.Create;
+  Result.BusinessId := TLacUtils.NewIDString
 end;
 
 procedure TEmpresa.SetBusinessId(const Value: String);

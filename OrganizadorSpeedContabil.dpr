@@ -19,7 +19,8 @@ uses
   Lac.Model.DAO.Empresa in 'Model\DAO\Lac.Model.DAO.Empresa.pas',
   Model.Entity.Empresa in 'Model\Entities\Model.Entity.Empresa.pas',
   Lac.Controller.Empresa in 'Controllers\Lac.Controller.Empresa.pas',
-  Lac.Router.Empresa in 'Routers\Lac.Router.Empresa.pas';
+  Lac.Router.Empresa in 'Routers\Lac.Router.Empresa.pas',
+  Lac.Utils.Certificados in 'Utils\Lac.Utils.Certificados.pas';
 
 {$R *.res}
 
