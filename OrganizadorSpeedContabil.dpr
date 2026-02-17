@@ -13,7 +13,13 @@ uses
   Spdc.UserAuth.Response in 'DTO\Spdc.UserAuth.Response.pas',
   Lac.Schema.ScriptExecute in 'Schemas\Lac.Schema.ScriptExecute.pas' {$R *.res},
   Spdc.Model.DAO.Usuario in 'Model\DAO\Spdc.Model.DAO.Usuario.pas',
-  Model.Entity.Usuario in 'Model\Entities\Model.Entity.Usuario.pas';
+  Model.Entity.Usuario in 'Model\Entities\Model.Entity.Usuario.pas',
+  Lac.Utils in 'Utils\Lac.Utils.pas',
+  Lac.Database.Migrations in 'Database\Migrations\Lac.Database.Migrations.pas',
+  Lac.Model.DAO.Empresa in 'Model\DAO\Lac.Model.DAO.Empresa.pas',
+  Model.Entity.Empresa in 'Model\Entities\Model.Entity.Empresa.pas',
+  Lac.Controller.Empresa in 'Controllers\Lac.Controller.Empresa.pas',
+  Lac.Router.Empresa in 'Routers\Lac.Router.Empresa.pas';
 
 {$R *.res}
 
@@ -22,4 +28,5 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(Tfrm_view_principal, frm_view_principal);
   Application.Run;
+
 end.

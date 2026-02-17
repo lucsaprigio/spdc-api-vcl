@@ -25,7 +25,16 @@ object frm_view_principal: Tfrm_view_principal
       Top = 0
       Width = 624
       Height = 441
+      PopupMenu = PopupMenu
       TabOrder = 0
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 568
+    Top = 152
+    object PopupMenu1: TMenuItem
+      Caption = 'Executar Scripts'
+      OnClick = PopupMenu1Click
     end
   end
 end

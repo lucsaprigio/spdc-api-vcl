@@ -17,6 +17,8 @@ begin
   THorse.Get('/api/user/:id', TControllerUsuario.GetUsuarioPorID);
   THorse.Get('/api/user_business/:id', TControllerUsuario.GetUsuarioByEmpresa);
   THorse.Post('/api/user', TControllerUsuario.PostNewUser);
+  THorse.Put('/api/user/:id', TControllerUsuario.PutUpdateUser);
+  THorse.Delete('/api/user/:id', TControllerUsuario.DeleteUser);
 end;
 
 end.

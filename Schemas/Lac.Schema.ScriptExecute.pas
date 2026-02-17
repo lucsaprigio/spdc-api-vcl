@@ -3,9 +3,9 @@ unit Lac.Schema.ScriptExecute;
 interface
 
 uses
-  FireDAC.Comp.Client, System.SysUtils, Spdc.Infra.Connection, FireDAC.UI.Intf,
+  FireDAC.Comp.Client, System.SysUtils, Spdc.Infra.Connection, FireDAC.UI.Intf, FireDAC.Comp.UI,
   FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util, FireDAC.Stan.Intf,
-  FireDAC.Comp.Script;
+  FireDAC.Comp.Script, Lac.Utils;
 
 type
   TDatabaseSchema = class
@@ -15,23 +15,29 @@ type
 
 implementation
 
+var
+  Qry: TFDQuery;
+  Connection : IControllerConnection;
+
 { TDatabaseSchema }
 
 class procedure TDatabaseSchema.Execute(const APath: string);
 var
   LScript : TFDScript;
 begin
+  Connection := TControllerConection.New;
+  Qry := TFDQuery.Create(nil);
 
-  LScript := TFDScript.Create(nil);
+  Qry.Connection := Connection.GetConnection;
   try
-    LScript.Connection := TControllerConection.New.GetConnection;
+    try
 
-    LScript.SQLScripts.Clear;
-    LScript.SQLScripts.Add.SQL.LoadFromFile(APath);
-
-    LScript.ExecuteAll;
+    Qry.ExecSQL;
+    except on E: Exception do
+      TLacUtils.GeraLog(E.Message);
+    end;
   finally
-   LScript.Free;
+   Qry.Free;
   end;
 end;
 

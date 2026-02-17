@@ -3,7 +3,7 @@ unit Infra.HorseServer;
 interface
 
 uses
-  System.SysUtils, Spdc.Router.Auth;
+  System.SysUtils, Spdc.Router.Auth, Lac.Router.Empresa;
 
 type
   TLogCallBack = reference to procedure(const AMsg : string);
@@ -28,6 +28,7 @@ begin
 
   Spdc.Router.Auth.Registry;
 
+  Lac.Router.Empresa.Registry;
   Spdc.Router.Usuario.Registry;
 
   THorse.Listen(APort,

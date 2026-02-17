@@ -12,11 +12,44 @@ type
     class function  BuscarPorID(aID: String): TUser;
     class function  BuscarPorEmail(aEmail: string): TUser;
     class procedure CriarUsuario(aUser: TUser);
+    class procedure ExcluirUsuario(aID: String);
+    class procedure AtualizarUsuario(aUser: TUser);
   end;
 
 implementation
 
 { TModelUsuario }
+
+class procedure TModelUsuario.AtualizarUsuario(aUser: TUser);
+var
+  lConexao: IControllerConnection;
+  lQry: TFDQuery;
+begin
+  lConexao := TControllerConection.New;
+  lQry := TFDQuery.Create(nil);
+
+  try
+    lConexao.Connect;
+    lQry.Connection := lConexao.GetConnection;
+
+    lQry.SQL.Text :=
+      'UPDATE TB_USERS SET ' +
+      '  USERNAME = :USERNAME, ' +
+      '  EMAIL = :EMAIL, ' +
+      '  UPDATED_AT = GETDATE() ' +
+      'WHERE USERID = :USERID';
+
+    lQry.ParamByName('USERID').DataType   := ftGuid;
+    lQry.ParamByName('USERID').AsString   := aUser.UserId;
+
+    lQry.ParamByName('USERNAME').AsString := aUser.Username;
+    lQry.ParamByName('EMAIL').AsString    := aUser.Email;
+
+    lQry.ExecSQL;
+  finally
+    lQry.Free;
+  end;
+end;
 
 class function TModelUsuario.BuscarPorEmail(aEmail: string): TUser;
 var
@@ -111,6 +144,26 @@ begin
     lQry.Free;
   end;
 
+end;
+
+class procedure TModelUsuario.ExcluirUsuario(aID: String);
+var
+  lConexao: IControllerConnection;
+  lQry: TFDQuery;
+begin
+  lConexao := TControllerConection.New;
+  lQry := TFDQuery.Create(nil);
+
+  lQry.Connection := lConexao.GetConnection;
+  try
+    lQry.SQL.Add('DELETE FROM TB_USERS WHERE USERID = :USERID');
+
+    lQry.ParamByName('USERID').AsString := aID;
+
+    lQry.ExecSQL;
+  finally
+    lQry.Free;
+  end;
 end;
 
 class function TModelUsuario.ListarPorEmpresa(aCodEmpresa: Integer): TJSONArray;

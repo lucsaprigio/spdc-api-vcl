@@ -9,14 +9,18 @@ uses
   Spdc.Infra.Connection, Horse, Horse.Jhonson, FireDAC.Comp.Client,
   Spdc.Router.Auth, Infra.HorseServer, FireDAC.UI.Intf, FireDAC.Stan.Async,
   FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util, FireDAC.Stan.Intf,
-  FireDAC.Comp.Script, FireDAC.Phys.MSSQL ;
+  FireDAC.Comp.Script, FireDAC.Phys.MSSQL, Vcl.Menus, Lac.Schema.ScriptExecute,
+  System.IOUtils, Lac.Database.Migrations ;
 
 type
   Tfrm_view_principal = class(TForm)
     pnlContainer: TPanel;
     memLog: TMemo;
+    PopupMenu: TPopupMenu;
+    PopupMenu1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure PopupMenu1Click(Sender: TObject);
   private
   public
     { Public declarations }
@@ -53,6 +57,18 @@ end;
 procedure Tfrm_view_principal.FormDestroy(Sender: TObject);
 begin
     TServerHorse.Stop;
+end;
+
+procedure Tfrm_view_principal.PopupMenu1Click(Sender: TObject);
+var
+  LPath: string;
+begin
+      TThread.Synchronize(nil, procedure
+      begin
+         memLog.Lines.Add('Rodando migrations...');
+      end);
+
+      TDatabaseMigrations.Run;
 end;
 
 end.

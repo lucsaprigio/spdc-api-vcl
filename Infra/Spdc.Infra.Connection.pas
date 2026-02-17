@@ -7,7 +7,7 @@ uses
   FireDAC.Stan.Intf, FireDAC.Comp.UI, FireDAC.Stan.Option, FireDAC.Stan.Error,
   FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
   FireDAC.Phys, FireDAC.Phys.FB, Data.DB, FireDAC.Comp.Client, FireDAC.DApt,
-  System.SysUtils;
+  System.SysUtils, FireDAC.VCLUI.Wait;
 
 type
   IControllerConnection = interface

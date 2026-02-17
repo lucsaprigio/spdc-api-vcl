@@ -7,7 +7,7 @@ uses
   System.JSON,
   Spdc.Model.DAO.Usuario,
   Model.Entity.Usuario,
-  REST.JSON, System.Hash, System.SysUtils;
+  REST.JSON, System.Hash, System.SysUtils, Lac.Utils;
 
 type
   TControllerUsuario = class
@@ -15,6 +15,8 @@ type
       class procedure GetUsuarioPorID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
       class procedure GetUsuarioByEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
       class procedure PostNewUser(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+      class procedure DeleteUser(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+      class procedure PutUpdateUser(Req: THorseRequest; Res: THorseResponse; Next: TProc);
   end;
 implementation
 
@@ -44,9 +46,7 @@ begin
   LID := Req.Params.Field('id').AsString;
 
   // Validando o tipo GUID para não retornar o erro 500 de internal erro
-  try
-    LGUIDValidacao := StringToGUID('{' + LID + '}');
-  except
+  if not TLacUtils.IsValidID(LID) then begin
     Res.Status(400).Send('O ID informado na URL não é um formato válido (UUID).');
     Exit;
   end;
@@ -57,7 +57,7 @@ begin
     Res.Send<TJSONObject>(TJson.ObjectToJsonObject(LUser));
   end
   else begin
-    Res.Status(404).Send('Cliente não encontrado');
+    Res.Status(404).Send('Usuário não encontrado');
   end;
 end;
 
@@ -102,6 +102,91 @@ begin
    finally
      LUser.Free;
    end;
+end;
+
+class procedure TControllerUsuario.PutUpdateUser(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+var
+  LID, LTempName, LTempEmail         : String;
+  LBody       : TJSONObject;
+  LUserExists, LCheckEmail : TUser;
+begin
+  LID := REq.Params.Field('id').AsString;
+
+  if not TLacUtils.IsValidID(LID) then begin
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).')
+  end;
+
+  LUserExists    := TModelUsuario.BuscarPorID(LID);
+
+  if not assigned(LUserExists) then begin
+    Res.Status(404).Send('Usuário não encontrado');
+    Exit;
+  end;
+
+  try
+   LBody := Req.Body<TJSONObject>;
+
+   if Assigned(LBody) then begin
+     if LBody.TryGetValue<string>('username', LTempName) then begin
+       if LTempName <> LUserExists.Username then begin
+        LUserExists.Username := LTempName;
+       end;
+     end;
+
+     if LBody.TryGetValue<string>('email', LTempEmail) then begin
+       if LTempEmail <> LUserExists.Email then begin
+       LCheckEmail := TModelUsuario.BuscarPorEmail(LTempEmail);
+        if Assigned(LCheckEmail) then begin
+          LCheckEmail.Free;
+          Res.Status(409).Send('Este e-mail já esta sendo utilizado por outro usuário.');
+          Exit;
+        end;
+       end;
+
+       LUserExists.Email := LTempEmail;
+     end;
+
+     TModelUsuario.AtualizarUsuario(LUserExists);
+
+     Res.Status(200).Send('Usuário atualizado com sucesso.');
+   end
+   else begin
+     Res.Status(400).Send('Nenhum dado enviado para atualização.');
+   end;
+  finally
+   LUserExists.Free;
+  end;
+
+end;
+
+class procedure TControllerUsuario.DeleteUser(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+var
+  LID : String;
+  LUser : TUser;
+begin
+  LID := Req.Params.Field('id').AsString;
+
+  if not TLacUtils.IsValidID(LID) then begin
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
+    Exit;
+  end;
+
+  LUser       := TModelUsuario.BuscarPorID(LID);
+
+  if Assigned(LUser) then begin
+   try
+     TModelUsuario.ExcluirUsuario(LID);
+
+     Res.Status(200).Send('Usuário Excluído com sucesso.')
+   finally
+     LUser.Free;
+   end;
+  end
+  else begin
+    Res.Status(401).Send('Usuário não encontrado');
+  end;
 end;
 
 end.

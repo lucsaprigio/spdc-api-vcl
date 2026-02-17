@@ -143,6 +143,12 @@
         </DCCReference>
         <DCCReference Include="Model\DAO\Spdc.Model.DAO.Usuario.pas"/>
         <DCCReference Include="Model\Entities\Model.Entity.Usuario.pas"/>
+        <DCCReference Include="Utils\Lac.Utils.pas"/>
+        <DCCReference Include="Database\Migrations\Lac.Database.Migrations.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.Empresa.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.Empresa.pas"/>
+        <DCCReference Include="Controllers\Lac.Controller.Empresa.pas"/>
+        <DCCReference Include="Routers\Lac.Router.Empresa.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
