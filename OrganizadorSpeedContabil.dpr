@@ -20,7 +20,11 @@ uses
   Model.Entity.Empresa in 'Model\Entities\Model.Entity.Empresa.pas',
   Lac.Controller.Empresa in 'Controllers\Lac.Controller.Empresa.pas',
   Lac.Router.Empresa in 'Routers\Lac.Router.Empresa.pas',
-  Lac.Utils.Certificados in 'Utils\Lac.Utils.Certificados.pas';
+  Lac.Utils.Certificados in 'Utils\Lac.Utils.Certificados.pas',
+  Model.Entity.UsuarioEmpresa in 'Model\Entities\Model.Entity.UsuarioEmpresa.pas',
+  Lac.Model.DAO.UsuarioEmpresa in 'Model\DAO\Lac.Model.DAO.UsuarioEmpresa.pas',
+  DTO.UsuarioEmpresa.Response in 'DTO\DTO.UsuarioEmpresa.Response.pas',
+  Lac.Controller.UsuarioEmpresa in 'Controllers\Lac.Controller.UsuarioEmpresa.pas';
 
 {$R *.res}
 

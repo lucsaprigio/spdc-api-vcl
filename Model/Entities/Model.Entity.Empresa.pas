@@ -50,7 +50,7 @@ end;
 class function TEmpresa.New: TEmpresa;
 begin
   Result := TEmpresa.Create;
-  Result.BusinessId := TLacUtils.NewIDString
+  Result.BusinessId := TLacUtils.NewIDString;
 end;
 
 procedure TEmpresa.SetBusinessId(const Value: String);

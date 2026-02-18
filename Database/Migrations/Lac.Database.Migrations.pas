@@ -9,6 +9,7 @@ type
   TDatabaseMigrations = class
     private
       class procedure CriarTabelaBusiness(AQuery : TFDQuery);
+      class procedure TB_USER_BUSINESS(AQuery: TFDQuery);
     public
       class procedure Run;
   end;
@@ -58,6 +59,7 @@ begin
 
     try
       CriarTabelaBusiness(LQry);
+      TB_USER_BUSINESS(LQry);
     except
       on E:Exception do
 
@@ -66,6 +68,27 @@ begin
     LQry.Free;
   end;
 
+end;
+
+class procedure TDatabaseMigrations.TB_USER_BUSINESS(AQuery: TFDQuery);
+begin
+  AQuery.SQL.Text :=
+    'IF OBJECT_ID(''dbo.TB_USER_BUSINESS'', ''U'') IS NULL ' +
+    ' BEGIN '+
+    '	CREATE TABLE dbo.TB_USER_BUSINESS ('+
+	  ' USERID UNIQUEIDENTIFIER NOT NULL,'+
+    '	BUSINESS_ID UNIQUEIDENTIFIER NOT NULL,'+
+    '	ROLE_NAME VARCHAR(50) NOT NULL,'+
+    '	CREATED_AT DATETIME NOT NULL DEFAULT GETDATE(),'+
+
+    '	PRIMARY KEY (USERID, BUSINESS_ID),'+
+
+    '	CONSTRAINT FK_UB_USER FOREIGN KEY (USERID) REFERENCES dbo.TB_USERS(USERID) ON DELETE CASCADE,'+
+    '	CONSTRAINT FK_UB_BUSINESS FOREIGN KEY (BUSINESS_ID) REFERENCES dbo.TB_BUSINESS(BUSINESS_ID) ON DELETE CASCADE'+
+    '	); '+
+    ' END;';
+
+    AQuery.ExecSQL;
 end;
 
 end.

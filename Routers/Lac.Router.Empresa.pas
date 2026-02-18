@@ -15,6 +15,7 @@ begin
    THorse.Post('/api/business', TControllerEmpresa.PostNewBusiness);
    THorse.Put('/api/business/:id/certificado', TControllerEmpresa.PutAtualizaCertificado);
    THorse.Put('/api/business/:id', TControllerEmpresa.PutAtualizarEmpresa);
+   THorse.Delete('/api/business/:id', TControllerEmpresa.DeleteExcluirEmpresa);
 end;
 
 end.

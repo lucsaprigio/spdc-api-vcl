@@ -12,6 +12,7 @@ type
     class function BuscarEmpresaPorID(aID: String): TEmpresa;
     class procedure AtualizarCertificado(aCnpj: String; aBusiness: TEmpresa);
     class procedure AtualizarEmpresa(aBusiness: TEmpresa);
+    class procedure ExcluirEmpresa(aID: String);
   end;
 
 implementation
@@ -187,6 +188,26 @@ begin
     LQry.ExecSQL;
   finally
     LQry.Free;
+  end;
+end;
+
+class procedure TDAOEmpresa.ExcluirEmpresa(aID: String);
+var
+  lConexao: IControllerConnection;
+  lQry: TFDQuery;
+begin
+  lConexao := TControllerConection.New;
+  lQry := TFDQuery.Create(nil);
+
+  lQry.Connection := lConexao.GetConnection;
+  try
+    lQry.SQL.Add('DELETE FROM TB_BUSINESS WHERE BUSINESS_ID = :ID');
+
+    lQry.ParamByName('ID').AsString := aID;
+
+    lQry.ExecSQL;
+  finally
+    lQry.Free;
   end;
 end;
 

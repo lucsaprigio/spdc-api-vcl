@@ -12,11 +12,42 @@ type
     class procedure PostNewBusiness(Req: THorseRequest; Res: THorseResponse; Next: TProc);
     class procedure PutAtualizaCertificado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
     class procedure PutAtualizarEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+    class procedure DeleteExcluirEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
   end;
 
 implementation
 
 { TControllerEmpresa }
+
+class procedure TControllerEmpresa.DeleteExcluirEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  LEmpresa: TEmpresa;
+  LID: String;
+begin
+  LID := Req.Params.Field('id').AsString;
+
+  if not TLacUtils.IsValidID(LID) then
+  begin
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
+    Exit;
+  end;
+
+  LEmpresa := TDAOEmpresa.BuscarEmpresaPorid(LID);
+
+  try
+    if Assigned(LEmpresa) then
+    begin
+      TDAOEmpresa.ExcluirEmpresa(LID);
+      Res.Status(200).Send('Empresa excluída com sucesso')
+    end
+    else
+    begin
+      Res.Status(404).Send('Empresa não encontrada.')
+    end;
+  finally
+    LEmpresa.Free;
+  end;
+end;
 
 class procedure TControllerEmpresa.GetBusinessByCnpj(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
@@ -115,14 +146,15 @@ var
   LBody: TJSONObject;
   LBusinessExist, LCheckCnpj: TEmpresa;
 begin
-  LID   := Req.Params.Field('id').AsString;
+  LID := Req.Params.Field('id').AsString;
 
   if not TLacUtils.IsValidID(LID) then
   begin
-    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).')
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
+    Exit;
   end;
 
-  LBusinessExist := TDAOEmpresa.BuscarEmpresaPorID(LID);
+  LBusinessExist := TDAOEmpresa.BuscarEmpresaPorid(LID);
 
   if not Assigned(LBusinessExist) then
   begin
@@ -133,13 +165,17 @@ begin
   try
     LBody := Req.Body<TJSONObject>;
 
-    if Assigned(LBody) then begin
+    if Assigned(LBody) then
+    begin
 
-      if Assigned(LBody.GetValue('cnpj')) then begin
+      if Assigned(LBody.GetValue('cnpj')) then
+      begin
         LTempCnpj := LBody.GetValue<string>('cnpj');
-        if LTempCnpj <> LBusinessExist.Cnpj then begin
+        if LTempCnpj <> LBusinessExist.Cnpj then
+        begin
           LCheckCnpj := TDAOEmpresa.BuscarEmpresaPorCnpj(LTempCnpj);
-          if Assigned(LCheckCnpj) then begin
+          if Assigned(LCheckCnpj) then
+          begin
             LCheckCnpj.Free;
             Res.Status(409).Send('Já existe este CNPJ no Cadastro de Empresa');
             Exit;
@@ -149,27 +185,33 @@ begin
         LBusinessExist.Cnpj := LTempCnpj;
       end;
 
-      if Assigned(LBody.GetValue('corporateName')) then begin
+      if Assigned(LBody.GetValue('corporateName')) then
+      begin
         LBusinessExist.CorporateName := LBody.GetValue<string>('corporateName');
       end;
 
-      if Assigned(LBody.GetValue('fantasyName')) then begin
+      if Assigned(LBody.GetValue('fantasyName')) then
+      begin
         LBusinessExist.FantasyName := LBody.GetValue<string>('fantasyName');
       end;
 
-      if Assigned(LBody.GetValue('ie')) then begin
+      if Assigned(LBody.GetValue('ie')) then
+      begin
         LBusinessExist.Ie := LBody.GetValue<string>('ie');
       end;
 
-      if Assigned(LBody.GetValue('uf')) then begin
+      if Assigned(LBody.GetValue('uf')) then
+      begin
         LBusinessExist.Uf := LBody.GetValue<string>('uf');
       end;
 
-      if Assigned(LBody.GetValue('env')) then begin
-        LBusinessExist.Environment:= LBody.GetValue<integer>('env');
+      if Assigned(LBody.GetValue('env')) then
+      begin
+        LBusinessExist.Environment := LBody.GetValue<integer>('env');
       end;
 
-      if Assigned(LBody.GetValue('lastNsu')) then begin
+      if Assigned(LBody.GetValue('lastNsu')) then
+      begin
         LBusinessExist.LastNSU := LBody.GetValue<string>('lastNsu');
       end;
 

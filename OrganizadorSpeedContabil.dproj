@@ -150,6 +150,10 @@
         <DCCReference Include="Controllers\Lac.Controller.Empresa.pas"/>
         <DCCReference Include="Routers\Lac.Router.Empresa.pas"/>
         <DCCReference Include="Utils\Lac.Utils.Certificados.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.UsuarioEmpresa.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.UsuarioEmpresa.pas"/>
+        <DCCReference Include="DTO\DTO.UsuarioEmpresa.Response.pas"/>
+        <DCCReference Include="Controllers\Lac.Controller.UsuarioEmpresa.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
