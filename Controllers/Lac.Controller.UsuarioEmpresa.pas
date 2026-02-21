@@ -4,12 +4,13 @@ interface
 
 uses
   Horse, System.JSON, Lac.Model.DAO.UsuarioEmpresa, REST.Json,
-  Model.Entity.UsuarioEmpresa, System.SysUtils;
+  Model.Entity.UsuarioEmpresa, System.SysUtils, Lac.Exceptions;
 
 type
   TLacControllerUsuarioEmpresa = class
     class procedure GetBuscarUsuarioEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
     class procedure PostNovoUsuarioEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+    class procedure DeleteUsuarioEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
   end;
 
 implementation
@@ -18,13 +19,35 @@ implementation
 
 uses DTO.UsuarioEmpresa.Response, Lac.Utils;
 
+class procedure TLacControllerUsuarioEmpresa.DeleteUsuarioEmpresa(
+  Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  LUserId, LBusinessId: String;
+begin
+  LUserId     := Req.Params.Field('userId').AsString;
+  LBusinessId := Req.Params.Field('businessId').AsString;
+
+  if (not TLacUtils.IsValidID(LUserId)) or (not TLacUtils.IsValidID(LBusinessId)) then begin
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
+    Exit;
+  end;
+
+  if not TDAOUsuarioEmpresa.BuscaUsuarioVinculado(LUserId, LBusinessId) then begin
+     raise EUsuarioEmpresaExistente.Create('Usuário vinculado não encontrado');
+  end;
+
+  TDAOUsuarioEmpresa.ExcluirUsuarioEmpresa(LUserId, LBusinessId);
+
+  Res.Status(200).Send('Empresa excluída com sucesso');
+end;
+
 class procedure TLacControllerUsuarioEmpresa.GetBuscarUsuarioEmpresa(
   Req: THorseRequest; Res: THorseResponse; Next: TProc);
 var
   LDTOEmpresaResponse : TDTOUsuarioEmpresaResponse;
   LID                 : String;
 begin
-  LID := REq.PArams.Field('id').AsString;
+  LID := Req.Params.Field('id').AsString;
 
   if not TLacUtils.IsValidID(LID) then begin
     Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
@@ -45,6 +68,7 @@ class procedure TLacControllerUsuarioEmpresa.PostNovoUsuarioEmpresa(
 var
   LBody: TJSONObject;
   LUsuarioEmpresa : TUsuarioEmpresa;
+  LBodyRoleName, LTempRoleName : String;
 begin
   LBody := Req.Body<TJSONObject>;
 
@@ -54,13 +78,25 @@ begin
     Exit;
   end;
 
-  LUsuarioEmpresa.New;
+  LUsuarioEmpresa := TUsuarioEmpresa.New;
 
   try
     try
        LUsuarioEmpresa.UserId     := LBody.GetValue<String>('userId');
        LUsuarioEmpresa.BusinessId := LBody.GetValue<String>('businessId');
-       LUsuarioEmpresa.RoleName   := LBody.GetValue<String>('roleName');
+
+       if TDAOUsuarioEmpresa.BuscaUsuarioVinculado(LUsuarioEmpresa.UserId, LUsuarioEmpresa.BusinessId) then begin
+         raise EUsuarioJaVinculado.Create('Usuário já vinculado a esta empresa');
+       end;
+
+
+       LBodyRoleName := 'USER';
+
+       if LBody.TryGetValue<String>('roleName', LTempRoleName) and (LTempRoleName.Trim <> '') then begin
+          LBodyRoleName := LTempRoleName.Trim;
+       end;
+
+       LUsuarioEmpresa.RoleName   := LBodyRoleName;
 
        TDAOUsuarioEmpresa.CriarUsuarioAEmpresa(LUsuarioEmpresa);
 

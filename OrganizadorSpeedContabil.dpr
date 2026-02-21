@@ -24,7 +24,9 @@ uses
   Model.Entity.UsuarioEmpresa in 'Model\Entities\Model.Entity.UsuarioEmpresa.pas',
   Lac.Model.DAO.UsuarioEmpresa in 'Model\DAO\Lac.Model.DAO.UsuarioEmpresa.pas',
   DTO.UsuarioEmpresa.Response in 'DTO\DTO.UsuarioEmpresa.Response.pas',
-  Lac.Controller.UsuarioEmpresa in 'Controllers\Lac.Controller.UsuarioEmpresa.pas';
+  Lac.Controller.UsuarioEmpresa in 'Controllers\Lac.Controller.UsuarioEmpresa.pas',
+  Lac.Router.UsuarioEmpresa in 'Routers\Lac.Router.UsuarioEmpresa.pas',
+  Lac.Exceptions in 'Exceptions\Lac.Exceptions.pas';
 
 {$R *.res}
 

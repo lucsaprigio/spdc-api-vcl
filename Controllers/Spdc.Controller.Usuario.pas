@@ -26,9 +26,9 @@ class procedure TControllerUsuario.GetUsuarioByEmpresa(Req: THorseRequest;
   Res: THorseResponse; Next: TProc);
 var
   lArray   : TJSONArray;
-  lEmpresa : Integer;
+  lEmpresa : String;
 begin
-  lEmpresa := Req.Params.Field('id').AsInteger;
+  lEmpresa := Req.Params.Field('id').AsString;
   lArray   := TModelUsuario.ListarPorEmpresa(lEmpresa);
 
   if Assigned(lArray) then begin
