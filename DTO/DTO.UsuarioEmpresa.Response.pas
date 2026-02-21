@@ -30,13 +30,15 @@ type
   TDTOUsuarioEmpresaResponse = class
   private
     FUserId: String;
-    FEmpresas: TObjectList<TDTOEmpresa>;
+    FEmpresas: TArray<TDTOEmpresa>;
 
     procedure SetUserId(const Value: String);
     procedure SetEmpresas(const Value: TObjectList<TDTOEmpresa>);
   public
     property UserId: String read FUserId write SetUserId;
-    property Empresas: TObjectList<TDTOEmpresa> read FEmpresas;
+    property Empresas: TArray<TDTOEmpresa> read FEmpresas;
+
+    procedure AddEmpresa(AEmpresa: TDTOEmpresa);
 
     constructor Create;
     destructor Destroy; override;
@@ -47,16 +49,25 @@ implementation
 
 { TDTOUsuarioEmpresaResponse }
 
+procedure TDTOUsuarioEmpresaResponse.AddEmpresa(AEmpresa: TDTOEmpresa);
+begin
+  SetLength(FEmpresas, Length(FEmpresas) + 1);
+  FEmpresas[High(FEmpresas)] := AEmpresa;
+end;
+
 constructor TDTOUsuarioEmpresaResponse.Create;
 begin
   inherited Create;
   // Como o meu FEmpresas retorna um ObjectList, precisamos colocar ele no Constructor
-  FEmpresas := TObjectList<TDTOEmpresa>.Create;
+  SetLength(FEmpresas, 0);
 end;
 
 destructor TDTOUsuarioEmpresaResponse.Destroy;
+var
+  LEmpresa : TDTOEmpresa;
 begin
-  Empresas.Free;
+  for LEmpresa in FEmpresas do
+      LEmpresa.Free;
   inherited;
 end;
 

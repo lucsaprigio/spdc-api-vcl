@@ -9,11 +9,44 @@ type
   TDAOUsuarioEmpresa = class
     class procedure CriarUsuarioAEmpresa(aUsuarioEmpresa : TUsuarioEmpresa);
     class function  BuscarUsuarioEmpresa(aUserId: string) : TDTOUsuarioEmpresaResponse;
+    class function  BuscaUsuarioVinculado(aUserId, aBusinessId: string): Boolean;
+    class procedure ExcluirUsuarioEmpresa(aUserId, aBusinessId: string);
+    class procedure AtualizarUsuarioEmpresa(aUsuarioEmpresa : TUsuarioEmpresa);
   end;
 
 implementation
 
 { TDAOUsuarioEmpresa }
+
+class procedure TDAOUsuarioEmpresa.AtualizarUsuarioEmpresa(
+  aUsuarioEmpresa: TUsuarioEmpresa);
+var
+  LConexao : IControllerConnection;
+  LQry     : TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LConexao.Connect;
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := ' UPDATE TB_USER_BUSINESS ' +
+   '    SET  ' +
+   '    BUSINESS_ID = :BUSINESS_ID' +
+   '    ,ROLE_NAME = :ROLE_NAME' +
+   '    WHERE USERID = :USERID' +
+   '    AND BUSINESS_ID = : BUSINESS_ID ';
+
+   LQry.ParamByName('BUSINESS_ID').ASString := aUsuarioEmpresa.BusinessId;
+   LQry.ParamByName('ROLE_NAME').AsString   := aUsuarioEmpresa.RoleName;
+
+   LQry.ExecSQL;
+
+  finally
+    LQry.Free;
+  end;
+end;
 
 class function TDAOUsuarioEmpresa.BuscarUsuarioEmpresa(
   aUserId: string): TDTOUsuarioEmpresaResponse;
@@ -57,11 +90,38 @@ begin
     LEmpresa.CorporateName:= LQry.FieldByName('CORPORATE_NAME').AsString;
     LEmpresa.FantasyName  := LQry.FieldByName('FANTASY_NAME').AsString;
 
-    Result.Empresas.Add(LEmpresa);
+    Result.AddEmpresa(LEmpresa);
 
     LQry.Next;
   end;
 
+  finally
+    LQry.Free;
+  end;
+end;
+
+class function TDAOUsuarioEmpresa.BuscaUsuarioVinculado(aUserId,
+  aBusinessId: string): Boolean;
+var
+  LConexao : IControllerConnection;
+  LQry     : TFDQuery;
+begin
+  Result := True;
+  LConexao := TControllerConection.New;
+  LQry     := TFDQuery.Create(nil);
+
+  try
+  LConexao.Connect;
+  LQry.Connection := LConexao.GetConnection;
+
+  LQry.SQL.Text := 'SELECT TOP(1) USERID, BUSINESS_ID FROM TB_USER_BUSINESS WHERE USERID = :USERID AND BUSINESS_ID = :BUSINESS_ID';
+
+  LQry.ParamByName('USERID').AsString      := aUserId;
+  LQry.ParamByName('BUSINESS_ID').AsString := aBusinessId;  
+
+  LQry.Open;
+
+  Result := not LQry.IsEmpty;
   finally
     LQry.Free;
   end;
@@ -89,13 +149,37 @@ begin
     'VALUES ' +
     '       (:USERID'+
     '        ,:BUSINESS_ID' +
-    '        ,:ROLE_NAME';
+    '        ,:ROLE_NAME)';
 
     LQry.ParamByName('USERID').AsString      := aUsuarioEmpresa.UserId;
     LQry.ParamByName('BUSINESS_ID').AsString := aUsuarioEmpresa.BusinessId;
     LQry.ParamByName('ROLE_NAME').AsString   := aUsuarioEmpresa.RoleName;
 
     LQry.ExecSQL;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class procedure TDAOUsuarioEmpresa.ExcluirUsuarioEmpresa(aUserId,
+  aBusinessId: string);
+var
+  LConexao : IControllerConnection;
+  LQry : TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LConexao.Connect;
+    LQry.Connection := LConexao.GetConnection;
+
+     LQry.SQL.Text := 'DELETE FROM TB_USER_BUSINESS WHERE USERID = :USERID AND BUSINESS_ID = :BUSINESS_ID';
+
+     LQry.ParamByName('USERID').AsString := aUserId;
+     LQry.ParamByName('BUSINESS_ID').AsString := aBusinessId;
+
+     LQry.ExecSQL;
   finally
     LQry.Free;
   end;

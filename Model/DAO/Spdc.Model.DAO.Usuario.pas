@@ -8,7 +8,7 @@ uses
 
 type
   TModelUsuario = class
-    class function  ListarPorEmpresa(aCodEmpresa: Integer): TJSONArray;
+    class function  ListarPorEmpresa(aCodEmpresa: String): TJSONArray;
     class function  BuscarPorID(aID: String): TUser;
     class function  BuscarPorEmail(aEmail: string): TUser;
     class procedure CriarUsuario(aUser: TUser);
@@ -166,7 +166,7 @@ begin
   end;
 end;
 
-class function TModelUsuario.ListarPorEmpresa(aCodEmpresa: Integer): TJSONArray;
+class function TModelUsuario.ListarPorEmpresa(aCodEmpresa: String): TJSONArray;
 var
   lConexao: IControllerConnection;
   lQry: TFDQuery;
@@ -180,7 +180,7 @@ begin
       (' SELECT CD_CLIENTE, CNPJ_EMPRESA, RAZAO_EMPRESA, CNPJ_MATRIZ, ITEN, EMP_CONCENTRADORA');
     lQry.SQL.Add
       (' FROM DB_CLIENTE_PAGINA_EMPRESA WHERE CD_CLIENTE = :pEmpresa');
-    lQry.ParamByName('pEmpresa').AsInteger := aCodEmpresa;
+    lQry.ParamByName('pEmpresa').AsString := aCodEmpresa;
 
     lQry.Open;
 
