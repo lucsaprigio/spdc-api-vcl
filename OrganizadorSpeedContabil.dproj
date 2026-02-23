@@ -156,6 +156,8 @@
         <DCCReference Include="Controllers\Lac.Controller.UsuarioEmpresa.pas"/>
         <DCCReference Include="Routers\Lac.Router.UsuarioEmpresa.pas"/>
         <DCCReference Include="Exceptions\Lac.Exceptions.pas"/>
+        <DCCReference Include="Services\Lac.Services.NotasDestinadas.pas"/>
+        <DCCReference Include="Factories\Lac.Factory.NFe.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

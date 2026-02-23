@@ -13,6 +13,7 @@ type
     class procedure AtualizarCertificado(aCnpj: String; aBusiness: TEmpresa);
     class procedure AtualizarEmpresa(aBusiness: TEmpresa);
     class procedure ExcluirEmpresa(aID: String);
+    class function BuscarUltimoNSU(aCnpj: String) : String;
   end;
 
 implementation
@@ -152,6 +153,33 @@ begin
       Result.CertPassword := LQry.FieldByName('CERT_PASSWORD').AsString;
       Result.CertExpiration := LQry.FieldByName('CERT_EXPIRATION').AsDateTime;
     end;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class function TDAOEmpresa.BuscarUltimoNSU(aCnpj: String): String;
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  Result := '0';
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := 'SELECT TOP 1 LAST_NSU FROM TB_BUSINESS WHERE CNPJ = :CNPJ';
+
+    LQry.ParamByName('CNPJ').AsString := aCnpj;
+
+    LQry.Open;
+
+    if not LQry.IsEmpty then begin
+      Result := LQry.FieldByName('LAST_NSU').AsString;
+    end;
+
   finally
     LQry.Free;
   end;

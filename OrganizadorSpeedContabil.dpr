@@ -26,7 +26,9 @@ uses
   DTO.UsuarioEmpresa.Response in 'DTO\DTO.UsuarioEmpresa.Response.pas',
   Lac.Controller.UsuarioEmpresa in 'Controllers\Lac.Controller.UsuarioEmpresa.pas',
   Lac.Router.UsuarioEmpresa in 'Routers\Lac.Router.UsuarioEmpresa.pas',
-  Lac.Exceptions in 'Exceptions\Lac.Exceptions.pas';
+  Lac.Exceptions in 'Exceptions\Lac.Exceptions.pas',
+  Lac.Services.NotasDestinadas in 'Services\Lac.Services.NotasDestinadas.pas',
+  Lac.Factory.NFe in 'Factories\Lac.Factory.NFe.pas';
 
 {$R *.res}
 
