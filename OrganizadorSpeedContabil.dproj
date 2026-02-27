@@ -158,6 +158,10 @@
         <DCCReference Include="Exceptions\Lac.Exceptions.pas"/>
         <DCCReference Include="Services\Lac.Services.NotasDestinadas.pas"/>
         <DCCReference Include="Factories\Lac.Factory.NFe.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.NotasDestinadas.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.NotasDestinadas.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
