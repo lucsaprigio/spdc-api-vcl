@@ -4,7 +4,8 @@ interface
 
 uses
   ACBrNFe, pcnRetDistDFeInt, System.SysUtils, Lac.Factory.NFe,
-  ACBrDFe.Conversao;
+  ACBrDFe.Conversao, Spdc.Infra.Connection, Model.Entity.NotasDestinadas,
+  Lac.Model.DAO.NotasDestinadas;
 type
   TServiceNotasDestinadas = class
     public
@@ -21,9 +22,18 @@ var
   LUltimoNSU : String;
   LItemSefaz : TdocZipCollectionItem;
   I          : Integer ;
+  LConexao   : IControllerConnection;
+  LDAONotasDestinadas :TDAOLacNotasDestinadas;
+  LNotasDestinadas    : TNotasDestinadas;
 begin
 
    LNFe := TLacFactoryAcbr.New.ConfigurarACBrNFe(aBusinessId);
+
+   LConexao := TControllerConection.New;
+   LConexao.Connect;
+
+   LDAONotasDestinadas := TDAOLacNotasDestinadas.Create(LConexao);
+   LNotasDestinadas := TNotasDestinadas.Create;
 
    try
      LNFe.DistribuicaoDFePorUltNSU(
@@ -39,7 +49,14 @@ begin
       if  LItemSefaz.schema = schresNFe then
       begin
         // É apenas um RESUMO da nota (A nota existe, mas você ainda não tem os produtos)
-        // TLacDAONotasDestinadas.SalvarResumo(ABusinessId, LItemSefaz.NSU, LItemSefaz.XML);
+        LNotasDestinadas.ChaveAcesso := LItemSefaz.resDFe.chDFe;
+        LNotasDestinadas.CnpjEmit    := LItemSefaz.resDFe.CNPJCPF;
+        LNotasDestinadas.NomeEmit    := LItemSefaz.resDFe.xNome;
+        LNotasDestinadas.DtEmi       := LItemSefaz.resDFe.dhEmi;
+        LNotasDestinadas.VrTot       := LItemSefaz.resDFe.vNF;
+        LNotasDestinadas.SitSefaz    := StrToIntDef(SituacaoDFeToStr(LItemSefaz.resDFe.cSitDFe), 0);
+
+        LDAONotasDestinadas.SalvarNotasDestinadas(LNotasDestinadas);
       end
       else if LItemSefaz.schema = schprocNFe then
       begin
@@ -56,6 +73,8 @@ begin
       end;
    finally
      LNFe.Free;
+     LDAONotasDestinadas.Free;
+     LNotasDestinadas.Free;
    end;
 end;
 

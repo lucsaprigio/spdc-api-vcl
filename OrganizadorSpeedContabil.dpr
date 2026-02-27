@@ -28,7 +28,9 @@ uses
   Lac.Router.UsuarioEmpresa in 'Routers\Lac.Router.UsuarioEmpresa.pas',
   Lac.Exceptions in 'Exceptions\Lac.Exceptions.pas',
   Lac.Services.NotasDestinadas in 'Services\Lac.Services.NotasDestinadas.pas',
-  Lac.Factory.NFe in 'Factories\Lac.Factory.NFe.pas';
+  Lac.Factory.NFe in 'Factories\Lac.Factory.NFe.pas',
+  Lac.Model.DAO.NotasDestinadas in 'Model\DAO\Lac.Model.DAO.NotasDestinadas.pas',
+  Model.Entity.NotasDestinadas in 'Model\Entities\Model.Entity.NotasDestinadas.pas';
 
 {$R *.res}
 
