@@ -4,7 +4,8 @@ interface
 
 uses
   Horse, System.JSON, Model.Entity.Empresa, Lac.Model.DAO.Empresa,
-  System.SysUtils, Lac.Utils, REST.JSON, Lac.Utils.Certificados;
+  System.SysUtils, Lac.Utils, REST.JSON, Lac.Utils.Certificados,
+  Lac.Services.NotasDestinadas;
 
 type
   TControllerEmpresa = class
@@ -13,6 +14,7 @@ type
     class procedure PutAtualizaCertificado(Req: THorseRequest; Res: THorseResponse; Next: TProc);
     class procedure PutAtualizarEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
     class procedure DeleteExcluirEmpresa(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+    class procedure GetNotasDestinadas(Req: THorseRequest; Res: THorseResponse; Next: TProc);
   end;
 
 implementation
@@ -228,4 +230,33 @@ begin
   end;
 end;
 
+class procedure TControllerEmpresa.GetNotasDestinadas(Req: THorseRequest;
+  Res: THorseResponse; Next: TProc);
+var
+  lCnpjParam, lBusinessIdParam : String;
+  lServiceNotasDestinadas : TServiceNotasDestinadas;
+begin
+  lBusinessIdParam := Req.Params.Field('businessId').AsString;
+  lCnpjParam       := Req.Params.Field('cnpj').AsString;
+
+  if not TLacUtils.IsValidID(lBusinessIdParam) then
+  begin
+    Res.Status(400).Send('O ID informado na URL não é um formato válido (GUID).');
+    Exit;
+  end;
+
+    lServiceNotasDestinadas := TServiceNotasDestinadas.Create;
+  try
+    try
+      lServiceNotasDestinadas.SincronizarSefaz(lBusinessIdParam, lCnpjParam);
+       Res.Status(200).Send('Notas Consultadas');
+    except on E:Exception do
+      begin
+       Res.Status(400).Send('Ocorreu um erro ' + E.Message);
+      end;
+    end;
+  finally
+    lServiceNotasDestinadas.Free;
+  end;
+end;
 end.

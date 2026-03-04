@@ -29,6 +29,9 @@ begin
 
    LNFe := TLacFactoryAcbr.New.ConfigurarACBrNFe(aBusinessId);
 
+   if not Assigned(LNFe) then
+    Exit;
+
    LConexao := TControllerConection.New;
    LConexao.Connect;
 

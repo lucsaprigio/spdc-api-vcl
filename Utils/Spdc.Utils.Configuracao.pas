@@ -16,13 +16,14 @@ type
     class var FDBXml: String;
     class var FDBUser: String;
     class var FDBPassword: String;
-    
+
     class var FServerXml: String;
     class var FPortXml: String;
     class var FDBUserXml: String;
     class var FDBPasswordXml: String;
     class var FDriverID: string;
     class var FJWT_SECRET: String;
+    class var FCaminhoSchemas: String;
   public
     class procedure CarregarIni;
 
@@ -40,6 +41,8 @@ type
     class property PortXml: String read FPortXml write FPortXml;
     class property DBUserXml: String read FDBUserXml write FDBUserXml;
     class property DBPasswordXml: String read FDBPasswordXml write FDBPasswordXml;
+
+    class property CaminhoSchemas: String read FCaminhoSchemas write FCaminhoSchemas;
 
     class property JWT_SECRET: String read FJWT_SECRET write FJWT_SECRET;
   end;
@@ -70,6 +73,8 @@ begin
          LArquivoINI.WriteString('BancoXml', 'DatabaseXml', '');
 
          LArquivoINI.WriteString('Auth', 'JWT_SECRET', '123456');
+
+         LArquivoINI.WriteString('Caminhos', 'Schemas', '');
        finally
         LArquivoINI.Free;
        end;
@@ -78,20 +83,22 @@ begin
   LArquivoINI := TIniFile.Create(LCaminhoINI);
 
   try
-    FDriverID   := LArquivoINI.ReadString('BancoConfig', 'DriverID', '');
-    FServer     := LArquivoINI.ReadString('BancoConfig', 'Server', '127.0.0.1');
-    FPort       := LArquivoINI.ReadString('BancoConfig', 'Port', '');
-    FDatabase   := LArquivoINI.ReadString('BancoConfig', 'Database', '');
-    FDBUser     := LArquivoINI.ReadString('BancoConfig', 'User', '');
-    FDBPassword := LArquivoINI.ReadString('BancoConfig', 'Password', '');
+    FDriverID        := LArquivoINI.ReadString('BancoConfig', 'DriverID', '');
+    FServer          := LArquivoINI.ReadString('BancoConfig', 'Server', '127.0.0.1');
+    FPort            := LArquivoINI.ReadString('BancoConfig', 'Port', '');
+    FDatabase        := LArquivoINI.ReadString('BancoConfig', 'Database', '');
+    FDBUser          := LArquivoINI.ReadString('BancoConfig', 'User', '');
+    FDBPassword      := LArquivoINI.ReadString('BancoConfig', 'Password', '');
 
-    FServerXml     := LArquivoINI.ReadString('BancoXml', 'ServerXml', '127.0.0.1');
-    FDBXml         := LArquivoINI.ReadString('BancoXml', 'DatabaseXml', '');
-    FPortXml       := LArquivoINI.ReadString('BancoXml', 'PortXml', '');
-    FDBUserXml     := LArquivoINI.ReadString('BancoXml', 'UserXml', '');
-    FDBPasswordXml := LArquivoINI.ReadString('BancoXml', 'PasswordXml', '');
+    FServerXml       := LArquivoINI.ReadString('BancoXml', 'ServerXml', '127.0.0.1');
+    FDBXml           := LArquivoINI.ReadString('BancoXml', 'DatabaseXml', '');
+    FPortXml         := LArquivoINI.ReadString('BancoXml', 'PortXml', '');
+    FDBUserXml       := LArquivoINI.ReadString('BancoXml', 'UserXml', '');
+    FDBPasswordXml   := LArquivoINI.ReadString('BancoXml', 'PasswordXml', '');
 
-    FJWT_SECRET    := LArquivoINI.ReadString('Auth', 'JWT_SECRET', '');
+    FJWT_SECRET      := LArquivoINI.ReadString('Auth', 'JWT_SECRET', '');
+
+    FCaminhoSchemas  := LArquivoINI.ReadString('Caminhos', 'Schemas', '');
 
   finally
     LArquivoINI.Free;
