@@ -4,7 +4,7 @@ interface
 
 uses
   ACBrNFe, pcnConversao, ACBrDFeSSL, Model.Entity.Empresa, Lac.Model.DAO.Empresa,
-  System.NetEncoding, System.SysUtils;
+  System.NetEncoding, System.SysUtils, Spdc.Utils.Configuracao;
 
 type
   ILacFactoryAcbr = interface
@@ -35,13 +35,18 @@ begin
 
   LEmpresa :=  TDAOEmpresa.BuscarEmpresaPorID(ABusinessId);
 
+  if not Assigned(LEmpresa) then
+    raise Exception.Create('Empresa não encontrada.');
+
   try
-    if not Assigned(LEmpresa) then begin
+    if Assigned(LEmpresa) then
+    begin
       LNFe.Configuracoes.Geral.SSLLib          := libWinCrypt;
       LNFe.Configuracoes.Geral.SSLCryptLib     := cryWinCrypt;
       LNFe.Configuracoes.Geral.SSLHttpLib      := httpWinHttp;
       LNFe.Configuracoes.Geral.SSLXmlSignLib   := xsLibXml2;
       LNFe.Configuracoes.Geral.Salvar          := False;
+      LNFe.Configuracoes.Arquivos.PathSchemas  := TAppConfig.CaminhoSchemas;
 
       LCert64                                  := TNetEncoding.Base64.DecodeStringToBytes(LEmpresa.CertBase64);
 
