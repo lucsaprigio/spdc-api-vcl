@@ -18,6 +18,7 @@ type
     FCertPassword: String;
     FCertExpiration: TDateTime;
     FUf: String;
+    FDataUltConsulta: TDateTime;
 
     procedure SetBusinessId(const Value: String);
    public
@@ -36,6 +37,7 @@ type
     property CertBase64: String read FCertBase64 write FCertBase64;
     property CertPassword: String read FCertPassword write FCertPassword;
     property CertExpiration: TDateTime read FCertExpiration write FCertExpiration;
+    property DataUltConsulta : TDateTime read FDataUltConsulta write FDataUltConsulta;
   end;
 
 implementation
