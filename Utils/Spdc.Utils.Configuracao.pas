@@ -54,10 +54,11 @@ implementation
 class procedure TAppConfig.CarregarIni;
 var
   LArquivoINI : TIniFile;
-  LCaminhoINI : String;
+  LCaminhoINI, LCaminhoSchemas : String;
 begin
   // C:\MeuApp\config.Ini -> Facilitanto caso for para um Linux.
-  LCaminhoINI := TPath.Combine(ExtractFilePath(ParamStr(0)), 'config.ini');
+  LCaminhoINI     := TPath.Combine(ExtractFilePath(ParamStr(0)), 'config.ini');
+  LCaminhoSchemas := TPath.Combine(ExtractFilePath(ParamStr(0)), 'Schemas');
 
   if not FileExists(LCaminhoINI) then begin
        LArquivoINI := TIniFile.Create(LCaminhoINI);
@@ -74,7 +75,7 @@ begin
 
          LArquivoINI.WriteString('Auth', 'JWT_SECRET', '123456');
 
-         LArquivoINI.WriteString('Caminhos', 'Schemas', '');
+         LArquivoINI.WriteString('Caminhos', 'Schemas', LCaminhoSchemas);
        finally
         LArquivoINI.Free;
        end;
@@ -98,7 +99,7 @@ begin
 
     FJWT_SECRET      := LArquivoINI.ReadString('Auth', 'JWT_SECRET', '');
 
-    FCaminhoSchemas  := LArquivoINI.ReadString('Caminhos', 'Schemas', '');
+    FCaminhoSchemas  := LArquivoINI.ReadString('Caminhos', 'Schemas', LCaminhoSchemas);
 
   finally
     LArquivoINI.Free;

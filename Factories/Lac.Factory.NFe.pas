@@ -23,6 +23,9 @@ type
 
 implementation
 
+uses
+  System.IOUtils;
+
 { TLacFactoryAcbr }
 
 function TLacFactoryAcbr.ConfigurarACBrNFe(const ABusinessId: String): TACBrNFe;
@@ -46,7 +49,7 @@ begin
       LNFe.Configuracoes.Geral.SSLHttpLib      := httpWinHttp;
       LNFe.Configuracoes.Geral.SSLXmlSignLib   := xsLibXml2;
       LNFe.Configuracoes.Geral.Salvar          := False;
-      LNFe.Configuracoes.Arquivos.PathSchemas  := TAppConfig.CaminhoSchemas;
+      LNFe.Configuracoes.Arquivos.PathSchemas  := TPath.Combine(TAppConfig.CaminhoSchemas, 'NFe');
 
       LCert64                                  := TNetEncoding.Base64.DecodeStringToBytes(LEmpresa.CertBase64);
 
@@ -56,9 +59,13 @@ begin
       LNFe.Configuracoes.Certificados.ArquivoPFX := '';
       LNFe.Configuracoes.Certificados.NumeroSerie := '';
 
-      LNFe.Configuracoes.WebServices.UF      := LEmpresa.Uf;
-      LNFe.Configuracoes.WebServices.TimeOut := 15000;
-      LNFe.Configuracoes.WebServices.Ambiente := taHomologacao;
+      LNFe.Configuracoes.WebServices.UF       := LEmpresa.Uf;
+      LNFe.Configuracoes.WebServices.TimeOut  := 15000;
+
+      if LEmpresa.Environment = 0 then
+        LNFe.Configuracoes.WebServices.Ambiente := taProducao
+      else
+        LNFe.Configuracoes.WebServices.Ambiente := taHomologacao;
 
 
       Result := LNFe;

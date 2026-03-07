@@ -14,6 +14,7 @@ type
     class procedure AtualizarEmpresa(aBusiness: TEmpresa);
     class procedure ExcluirEmpresa(aID: String);
     class function BuscarUltimoNSU(aCnpj: String) : String;
+    class procedure AtualizarUltimoNSU(aID, aUltNSU, aCnpj : String);
   end;
 
 implementation
@@ -71,6 +72,34 @@ begin
     LQry.ParamByName('UF').AsString := aBusiness.Uf;
     LQry.ParamByName('ENVIRONMENT').AsInteger := aBusiness.Environment;
     LQry.ParamByName('LAST_NSU').AsString := aBusiness.LastNSU;
+
+    LQry.ExecSQL;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class procedure TDAOEmpresa.AtualizarUltimoNSU(aID, aUltNSU, aCnpj: String);
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+    try
+    LQry.Connection := LConexao.GetConnection;
+
+
+    LQry.SQL.Text :=
+     ' UPDATE TB_BUSINESS'+
+     ' SET LAST_NSU = : LAST_NSU' +
+     ' WHERE BUSINESS_ID = :BUSINESS_ID' +
+     ' AND CNPJ = :CNPJ' ;
+
+    LQry.ParamByName('LAST_NSU').AsString := aUltNSU;
+    LQry.ParamByName('ID').AsString     := aID;
+    LQry.ParamByName('CNPJ').AsString := aCnpj;
 
     LQry.ExecSQL;
   finally

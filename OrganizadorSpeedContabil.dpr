@@ -30,7 +30,10 @@ uses
   Lac.Services.NotasDestinadas in 'Services\Lac.Services.NotasDestinadas.pas',
   Lac.Factory.NFe in 'Factories\Lac.Factory.NFe.pas',
   Lac.Model.DAO.NotasDestinadas in 'Model\DAO\Lac.Model.DAO.NotasDestinadas.pas',
-  Model.Entity.NotasDestinadas in 'Model\Entities\Model.Entity.NotasDestinadas.pas';
+  Model.Entity.NotasDestinadas in 'Model\Entities\Model.Entity.NotasDestinadas.pas' {$R *.res},
+  Model.DAO.Interfaces in 'Model\DAO\Interfaces\Model.DAO.Interfaces.pas',
+  Model.Entity.NotasDestinadasXML in 'Model\Entities\Model.Entity.NotasDestinadasXML.pas',
+  Lac.Model.DAO.NotasDestinadasXML in 'Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas';
 
 {$R *.res}
 

@@ -162,6 +162,9 @@
         <DCCReference Include="Model\Entities\Model.Entity.NotasDestinadas.pas">
             <Form>$R *.res</Form>
         </DCCReference>
+        <DCCReference Include="Model\DAO\Interfaces\Model.DAO.Interfaces.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.NotasDestinadasXML.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -1135,6 +1138,7 @@
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
             </Platforms>
+            <ModelSupport>False</ModelSupport>
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>

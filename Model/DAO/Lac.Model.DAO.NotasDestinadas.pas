@@ -3,14 +3,15 @@ unit Lac.Model.DAO.NotasDestinadas;
 interface
 
 uses Model.Entity.NotasDestinadas, System.JSON, FIREDAC.Comp.Client, System.SysUtils,
-  Spdc.Infra.Connection, Data.DB;
+  Spdc.Infra.Connection, Data.DB, Model.DAO.Interfaces;
 
 type
-  TDAOLacNotasDestinadas = class
+  TDAOLacNotasDestinadas = class(TInterfacedObject, IDAONotasDestinadas)
   private
     FConexao : IControllerConnection;
   public
-      constructor Create(AConexao : IControllerConnection);
+    constructor Create(AConexao : IControllerConnection);
+    class function New(AConexao : IControllerConnection) : IDAONotasDestinadas;
 
     procedure SalvarNotasDestinadas(ANotaDestinada: TNotasDestinadas);
     procedure AtualizarStatus(AId: String; ANovoStatus: Integer);
@@ -23,12 +24,18 @@ implementation
 procedure TDAOLacNotasDestinadas.AtualizarStatus(AId: String;
   ANovoStatus: Integer);
 begin
-
+    // Implementar
 end;
 
 constructor TDAOLacNotasDestinadas.Create(AConexao: IControllerConnection);
 begin
     FConexao := AConexao;
+end;
+
+class function TDAOLacNotasDestinadas.New(
+  AConexao: IControllerConnection): IDAONotasDestinadas;
+begin
+  Result := Self.Create(AConexao);
 end;
 
 procedure TDAOLacNotasDestinadas.SalvarNotasDestinadas(ANotaDestinada: TNotasDestinadas);
