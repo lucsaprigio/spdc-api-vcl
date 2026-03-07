@@ -33,7 +33,9 @@ uses
   Model.Entity.NotasDestinadas in 'Model\Entities\Model.Entity.NotasDestinadas.pas' {$R *.res},
   Model.DAO.Interfaces in 'Model\DAO\Interfaces\Model.DAO.Interfaces.pas',
   Model.Entity.NotasDestinadasXML in 'Model\Entities\Model.Entity.NotasDestinadasXML.pas',
-  Lac.Model.DAO.NotasDestinadasXML in 'Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas';
+  Lac.Model.DAO.NotasDestinadasXML in 'Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas',
+  Sync.SincronizacaoDfe in 'Sync\Sync.SincronizacaoDfe.pas',
+  Sync.Interfaces in 'Sync\Interfaces\Sync.Interfaces.pas';
 
 {$R *.res}
 

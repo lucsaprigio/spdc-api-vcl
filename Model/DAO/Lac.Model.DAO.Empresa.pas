@@ -15,6 +15,8 @@ type
     class procedure ExcluirEmpresa(aID: String);
     class function BuscarUltimoNSU(aCnpj: String) : String;
     class procedure AtualizarUltimoNSU(aID, aUltNSU, aCnpj : String);
+    class function BuscarEmpresasPendentesDFe: TArray<TEmpresa>;
+    class procedure AtualizarDataConsulta(const ABusinessId: string);
   end;
 
 implementation
@@ -93,7 +95,7 @@ begin
 
     LQry.SQL.Text :=
      ' UPDATE TB_BUSINESS'+
-     ' SET LAST_NSU = : LAST_NSU' +
+     ' SET LAST_NSU = :LAST_NSU' +
      ' WHERE BUSINESS_ID = :BUSINESS_ID' +
      ' AND CNPJ = :CNPJ' ;
 
@@ -182,6 +184,71 @@ begin
       Result.CertPassword := LQry.FieldByName('CERT_PASSWORD').AsString;
       Result.CertExpiration := LQry.FieldByName('CERT_EXPIRATION').AsDateTime;
     end;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class function TDAOEmpresa.BuscarEmpresasPendentesDFe: TArray<TEmpresa>;
+var
+  LConexao: iControllerConnection;
+  LQry: TFDQuery;
+  LEmpresa : TEmpresa;
+begin
+  Result := nil;
+
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := ' SELECT BUSINESS_ID, CNPJ, LAST_NSU' +
+                     ' FROM TB_BUSINESS' +
+                     ' WHERE DATA_ULTIMA_CONSULTA IS NULL' +
+                     ' OR DATEDIFF(MINUTE, DATA_ULTIMA_CONSULTA, GETDATE()) >= 60';
+
+
+    LQry.Open;
+
+    while not LQry.Eof do
+    begin
+      LEmpresa := TEmpresa.Create;
+      LEmpresa.BusinessId := LQry.FieldByName('BUSINESS_ID').AsString;
+      LEmpresa.Cnpj       := LQry.FieldByName('CNPJ').AsString;
+      LEmpresa.LastNSU    := LQry.FieldByName('LAST_NSU').AsString;
+
+      // Incrementando sempre o Array
+      SetLength(Result, Length(Result) + 1);
+
+      Result[High(Result)] := LEmpresa;
+
+      LQry.Next;
+    end;
+  finally
+    LQry.Free;
+  end;
+end;
+
+class procedure TDAOEmpresa.AtualizarDataConsulta(const ABusinessId: string);
+var
+  LConexao: IControllerConnection;
+  LQry: TFDQuery;
+begin
+  LConexao := TControllerConection.New;
+  LQry := TFDQuery.Create(nil);
+
+  try
+    LQry.Connection := LConexao.GetConnection;
+
+    LQry.SQL.Text := ' UPDATE TB_BUSINESS' +
+                     ' SET DATA_ULTIMA_CONSULTA = GETDATE()' +
+                     ' WHERE BUSINESS_ID = :BUSINESS_ID';
+
+    LQry.ParamByName('BUSINESS_ID').AsString := ABusinessId;
+
+    LQry.ExecSQL;
+
   finally
     LQry.Free;
   end;
