@@ -4,12 +4,15 @@ interface
 
 uses
   System.SysUtils, Spdc.Router.Auth, Lac.Router.Empresa,
-  Lac.Router.UsuarioEmpresa;
+  Lac.Router.UsuarioEmpresa, Sync.Interfaces;
 
 type
   TLogCallBack = reference to procedure(const AMsg : string);
 
  TServerHorse = class
+ private
+  class var FWorkerDFe : ISyncJob;
+ public
    class procedure Start(APort: Integer; const AOnLog: TLogCallback = nil);
    class procedure Stop;
  end;
@@ -19,7 +22,8 @@ implementation
 uses
   Horse,
   Horse.Jhonson,
-  Spdc.Router.Usuario;
+  Spdc.Router.Usuario,
+  Sync.SincronizacaoDfe;
 
 { TServerHorse }
 
@@ -33,6 +37,9 @@ begin
   Spdc.Router.Usuario.Registry;
   Lac.Router.UsuarioEmpresa.Registry;
 
+  FWorkerDFe := TWorkerSincronizacaoDFe.Create;
+  FWorkerDFe.Iniciar;
+
   THorse.Listen(APort,
     procedure
     begin
@@ -44,6 +51,8 @@ end;
 class procedure TServerHorse.Stop;
 begin
     if THorse.IsRunning then begin
+      FWorkerDFe.Parar;
+
       THorse.StopListen;
     end;
 end;
