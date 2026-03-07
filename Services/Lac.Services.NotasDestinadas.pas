@@ -62,6 +62,9 @@ begin
     lUltNSURetorno := LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.ultNSU;
     lMaxNSURetorno := LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.maxNSU;
 
+    if Trim(lUltNSURetorno) <> '' then
+        LUltimoNSU := lUltNSURetorno;
+
       if LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.cStat = 138 then
       begin
         for I := 0 to LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.docZip.Count - 1 do
@@ -92,7 +95,8 @@ begin
                 LNotasDestinadasXML.Free;
               end;
 
-            end
+            end;
+            {
             else if LItemSefaz.schema = schprocNFe then
             begin
               // É o XML COMPLETO da nota (O fornecedor emitiu e você já pode dar entrada)
@@ -105,11 +109,12 @@ begin
             end
             else if LItemSefaz.schema = schprocEventoNFe then
                 // Xml Completo de um Evento
+            }
           finally
              LNotasDestinadas.Free;
           end;
         end;
-         LUltimoNSU := lUltNSURetorno;
+
       end;
        until (StrToIntDef(lUltNSURetorno, 0) >= (StrToIntDef(lMaxNSURetorno, 0 )))
              or (LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.CStat <> 138);
