@@ -168,6 +168,10 @@
         <DCCReference Include="Sync\Sync.SincronizacaoDfe.pas"/>
         <DCCReference Include="Sync\Interfaces\Sync.Interfaces.pas"/>
         <DCCReference Include="Sync\Sync.Sincronismo.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.NFSaida.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.NotasSaida.pas"/>
+        <DCCReference Include="Controllers\Lac.Controller.NFSaida.pas"/>
+        <DCCReference Include="Routers\Lac.Router.NotasSaidas.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

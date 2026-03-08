@@ -36,7 +36,11 @@ uses
   Lac.Model.DAO.NotasDestinadasXML in 'Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas',
   Sync.SincronizacaoDfe in 'Sync\Sync.SincronizacaoDfe.pas',
   Sync.Interfaces in 'Sync\Interfaces\Sync.Interfaces.pas',
-  Sync.Sincronismo in 'Sync\Sync.Sincronismo.pas';
+  Sync.Sincronismo in 'Sync\Sync.Sincronismo.pas',
+  Model.Entity.NFSaida in 'Model\Entities\Model.Entity.NFSaida.pas',
+  Lac.Model.DAO.NotasSaida in 'Model\DAO\Lac.Model.DAO.NotasSaida.pas',
+  Lac.Controller.NFSaida in 'Controllers\Lac.Controller.NFSaida.pas',
+  Lac.Router.NotasSaidas in 'Routers\Lac.Router.NotasSaidas.pas';
 
 {$R *.res}
 
