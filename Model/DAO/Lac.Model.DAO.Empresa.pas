@@ -99,9 +99,9 @@ begin
      ' WHERE BUSINESS_ID = :BUSINESS_ID' +
      ' AND CNPJ = :CNPJ' ;
 
-    LQry.ParamByName('LAST_NSU').AsString := aUltNSU;
-    LQry.ParamByName('ID').AsString     := aID;
-    LQry.ParamByName('CNPJ').AsString := aCnpj;
+    LQry.ParamByName('LAST_NSU').AsString        := aUltNSU;
+    LQry.ParamByName('BUSINESS_ID').AsString     := aID;
+    LQry.ParamByName('CNPJ').AsString            := aCnpj;
 
     LQry.ExecSQL;
   finally

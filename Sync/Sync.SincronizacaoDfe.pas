@@ -38,7 +38,11 @@ begin
             // Gravar no Log
           end;
 
-          TThread.Sleep(60000);
+          {$IFDEF RELEASE}
+            TThread.Sleep(10 * 10 * 1000); // 10 Minutos
+          {$ELSE}
+            TThread.Sleep(30 * 1000); // 30 segundos
+          {$ENDIF}
         end;
       end
     );
@@ -82,15 +86,14 @@ begin
       try
         try
           lService.SincronizarSefaz(lEmpresa.BusinessId, lEmpresa.Cnpj);
-
-          TDAOEmpresa.AtualizarDataConsulta(lEmpresa.BusinessId);
         except on E: Exception do
         begin
-          raise Exception.Create('Ocorreu um erro: ' + E.Message);
+          // Colocar um LOG depois
         end;
         end;
       finally
         // Precisa dar o Free aqui pois lá no DAO eu crio ele e precisa ser liberado.
+        TDAOEmpresa.AtualizarDataConsulta(lEmpresa.BusinessId);
         lEmpresa.Free;
       end;
     end;

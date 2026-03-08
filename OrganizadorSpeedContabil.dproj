@@ -167,6 +167,7 @@
         <DCCReference Include="Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas"/>
         <DCCReference Include="Sync\Sync.SincronizacaoDfe.pas"/>
         <DCCReference Include="Sync\Interfaces\Sync.Interfaces.pas"/>
+        <DCCReference Include="Sync\Sync.Sincronismo.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

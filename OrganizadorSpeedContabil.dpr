@@ -35,7 +35,8 @@ uses
   Model.Entity.NotasDestinadasXML in 'Model\Entities\Model.Entity.NotasDestinadasXML.pas',
   Lac.Model.DAO.NotasDestinadasXML in 'Model\DAO\Lac.Model.DAO.NotasDestinadasXML.pas',
   Sync.SincronizacaoDfe in 'Sync\Sync.SincronizacaoDfe.pas',
-  Sync.Interfaces in 'Sync\Interfaces\Sync.Interfaces.pas';
+  Sync.Interfaces in 'Sync\Interfaces\Sync.Interfaces.pas',
+  Sync.Sincronismo in 'Sync\Sync.Sincronismo.pas';
 
 {$R *.res}
 
