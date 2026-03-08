@@ -3,13 +3,15 @@ unit Model.Entity.NFSaida;
 interface
 
 uses
-  System.SysUtils;
+  System.SysUtils, System.RegularExpressions;
 
 type
 TNotasSaida = class
   private
     FId: string;
     FBusinessId: string;
+    FClienteId: string;
+    FCpfCnpj: string;
     FNumero: Integer;
     FSerie: Integer;
     FChaveAcesso: string;
@@ -19,7 +21,6 @@ TNotasSaida = class
     FValorTotal: Double;
     FBaseIcms: Double;
     FValorIcms: Double;
-    FAliqIcms : Double;
     FBaseSt : Double;
     FValorSt : Double;
     FObsNf : WideString;
@@ -27,8 +28,10 @@ TNotasSaida = class
     // Assinaturas dos Getters e Setters
     function GetId: string;
     procedure SetId(const Value: string);
-    function GetAliqIcms: Double;
-    procedure SetAliqIcms(const Value: Double);
+
+    procedure SetClienteId(const Value: string);
+
+    procedure SetCpfCnpj(const Value: string);
 
     function GetBaseSt: Double;
     procedure SetBaseSt(const Value: Double);
@@ -39,10 +42,14 @@ TNotasSaida = class
     function GetObsNf: WideString;
     procedure SetObsNf(const Value: WideString);
 
+    public
     constructor Create(const aId : String = '');
+
 
     property Id: string read GetId write SetId;
     property BusinessId: string read FBusinessId write FBusinessId;
+    property ClienteId : string read FClienteId write SetClienteId;
+    property CpfCnpj : String read FCpfCnpj write SetCpfCnpj;
     property Numero: Integer read FNumero write FNumero;
     property Serie: Integer read FSerie write FSerie;
     property ChaveAcesso: string read FChaveAcesso write FChaveAcesso;
@@ -52,7 +59,6 @@ TNotasSaida = class
     property ValorTotal: Double read FValorTotal write FValorTotal;
     property BaseIcms: Double read FBaseIcms write FBaseIcms;
     property ValorIcms: Double read FValorIcms write FValorIcms;
-    property AliqIcms: Double read GetAliqIcms write SetAliqIcms;
     property BaseSt: Double read GetBaseSt write SetBaseSt;
     property ValorSt: Double read GetValorSt write SetValorSt;
     property ObsNf: WideString read GetObsNf write SetObsNf;
@@ -69,11 +75,6 @@ begin
       FId := TGUID.NewGuid.toString().Replace('{', '').Replace('}', '')
     else
       FId := aId;
-end;
-
-function TNotasSaida.GetAliqIcms: Double;
-begin
-     Result := FAliqIcms;
 end;
 
 function TNotasSaida.GetBaseSt: Double;
@@ -94,11 +95,6 @@ end;
 function TNotasSaida.GetObsNf: WideString;
 begin
     Result := FObsNf;
-end;
-
-procedure TNotasSaida.SetAliqIcms(const Value: Double);
-begin
-      FAliqIcms := Value;
 end;
 
 procedure TNotasSaida.SetBaseSt(const Value: Double);
@@ -128,3 +124,21 @@ begin
 end;
 
 
+procedure TNotasSaida.SetCpfCnpj(const Value: string);
+var
+  lDocLimpo : String;
+begin
+  lDocLimpo := TRegEx.Replace(Value, '[^0-9]', ''); 
+
+  if (Length(Value) <> 11) and (Length(Value) <> 14) then
+      raise Exception.Create('Documento inválido! O CPF deve ter 11 dígitos e o CNPJ 14.');
+
+  FCpfCnpj := lDocLimpo;
+end;
+
+procedure TNotasSaida.SetClienteId(const Value: string);
+begin
+      FClienteId := Value;
+end;
+
+end.
