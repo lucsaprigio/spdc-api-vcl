@@ -11,8 +11,8 @@ implementation
 
 procedure Registry;
 begin
-    THorse.Get('/api/nfe/saida/:businessId/:numero/:serie/:modelo', TLacControllerNFSaida.GetBuscarNFSaida);
-    THorse.Get('/api/nfe/saida/:businessId', TLacControllerNFSaida.GetListarNFSaida);
+    THorse.Get('/api/nfe/saida/:businessId/buscar', TLacControllerNFSaida.GetBuscarNFSaida);
+    THorse.Get('/api/nfe/saida/:businessId/listar', TLacControllerNFSaida.GetListarNFSaida);
     THorse.Post('/api/nfe/saida', TLacControllerNFSaida.PostSalvarNFSaida);
 end;
 

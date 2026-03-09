@@ -41,7 +41,7 @@ begin
           {$IFDEF RELEASE}
             TThread.Sleep(10 * 10 * 1000); // 10 Minutos
           {$ELSE}
-            TThread.Sleep(30 * 1000); // 30 segundos
+            TThread.Sleep(30 * 30 * 1000); // 30 segundos
           {$ENDIF}
         end;
       end

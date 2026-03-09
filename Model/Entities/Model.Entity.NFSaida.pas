@@ -6,6 +6,7 @@ uses
   System.SysUtils, System.RegularExpressions;
 
 type
+{$M+}
 TNotasSaida = class
   private
     FId: string;
@@ -29,6 +30,8 @@ TNotasSaida = class
     function GetId: string;
     procedure SetId(const Value: string);
 
+    procedure SetBusinessId(const Value: string);
+
     procedure SetClienteId(const Value: string);
 
     procedure SetCpfCnpj(const Value: string);
@@ -42,12 +45,12 @@ TNotasSaida = class
     function GetObsNf: WideString;
     procedure SetObsNf(const Value: WideString);
 
-    public
+  public
     constructor Create(const aId : String = '');
 
-
+  published
     property Id: string read GetId write SetId;
-    property BusinessId: string read FBusinessId write FBusinessId;
+    property BusinessId: string read FBusinessId write SetBusinessId;
     property ClienteId : string read FClienteId write SetClienteId;
     property CpfCnpj : String read FCpfCnpj write SetCpfCnpj;
     property Numero: Integer read FNumero write FNumero;
@@ -63,6 +66,7 @@ TNotasSaida = class
     property ValorSt: Double read GetValorSt write SetValorSt;
     property ObsNf: WideString read GetObsNf write SetObsNf;
   end;
+  {$M-}
 
 implementation
 
@@ -102,6 +106,16 @@ begin
       FBaseSt := Value;
 end;
 
+procedure TNotasSaida.SetBusinessId(const Value: string);
+begin
+   if Value.Trim = '' then begin
+    FBusinessId := '';
+    Exit;
+  end;
+
+    FBusinessId := Value.Replace('{', '').Replace('}', '');
+end;
+
 procedure TNotasSaida.SetValorSt(const Value: Double);
 begin
       FValorSt := Value;
@@ -130,7 +144,7 @@ var
 begin
   lDocLimpo := TRegEx.Replace(Value, '[^0-9]', ''); 
 
-  if (Length(Value) <> 11) and (Length(Value) <> 14) then
+  if (Length(lDocLimpo) <> 11) and (Length(lDocLimpo) <> 14) then
       raise Exception.Create('Documento inválido! O CPF deve ter 11 dígitos e o CNPJ 14.');
 
   FCpfCnpj := lDocLimpo;
