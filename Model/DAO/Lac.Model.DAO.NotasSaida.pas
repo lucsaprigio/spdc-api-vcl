@@ -4,7 +4,7 @@ interface
 
 uses
   Model.DAO.Interfaces, Model.Entity.NFSaida, Spdc.Infra.Connection,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, System.SysUtils;
 
 type
   TDAONFeSaida = class(TInterfacedObject, IDAONFSaida)
@@ -18,7 +18,7 @@ type
 
       procedure SalvarNFSaida(aNF : TNotasSaida);
       function  BuscarNFSaida(aBusinessId, aNumero, aSerie, aModelo, aCpfCnpj: String) : TNotasSaida;
-      function ListarNFSaida(aBusinessId : String; aNumero: String = '';
+      function  ListarNFSaida(aBusinessId : String; aNumero: String = '';
                               aSerie :String = ''; aModelo: String = '';
                               aCpfCnpj : String = '') : TArray<TNotasSaida>;
   end;
@@ -188,7 +188,6 @@ begin
                      '   :CHAVE_ACESSO, :PROTOCOLO, :CFOP, :DATA_EMISSAO, :VALOR_TOTAL, ' +
                      '   :BASE_ICMS, :VALOR_ICMS, :BASE_ST, :VALOR_ST, :OBS_NF ' +
                      ' )';
-
 
     lQry.ParamByName('ID').AsString           := aNF.Id;
     lQry.ParamByName('BUSINESS_ID').AsString  := aNF.BusinessId;

@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, Spdc.Router.Auth, Lac.Router.Empresa,
-  Lac.Router.UsuarioEmpresa, Sync.Interfaces, Sync.Sincronismo;
+  Lac.Router.UsuarioEmpresa, Sync.Interfaces, Sync.Sincronismo, Lac.Router.NotasSaidas;
 
 type
   TLogCallBack = reference to procedure(const AMsg : string);
@@ -36,6 +36,7 @@ begin
   Lac.Router.Empresa.Registry;
   Spdc.Router.Usuario.Registry;
   Lac.Router.UsuarioEmpresa.Registry;
+  Lac.Router.NotasSaidas.Registry;
 
   FSincronismo := TSincronizador.New;
 
