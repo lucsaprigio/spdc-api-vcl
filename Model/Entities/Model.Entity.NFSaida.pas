@@ -6,7 +6,6 @@ uses
   System.SysUtils, System.RegularExpressions;
 
 type
-{$M+}
 TNotasSaida = class
   private
     FId: string;
@@ -66,7 +65,6 @@ TNotasSaida = class
     property ValorSt: Double read GetValorSt write SetValorSt;
     property ObsNf: WideString read GetObsNf write SetObsNf;
   end;
-  {$M-}
 
 implementation
 

@@ -40,7 +40,11 @@ uses
   Model.Entity.NFSaida in 'Model\Entities\Model.Entity.NFSaida.pas',
   Lac.Model.DAO.NotasSaida in 'Model\DAO\Lac.Model.DAO.NotasSaida.pas',
   Lac.Controller.NFSaida in 'Controllers\Lac.Controller.NFSaida.pas',
-  Lac.Router.NotasSaidas in 'Routers\Lac.Router.NotasSaidas.pas';
+  Lac.Router.NotasSaidas in 'Routers\Lac.Router.NotasSaidas.pas',
+  Model.Entity.Cliente in 'Model\Entities\Model.Entity.Cliente.pas',
+  Lac.Model.DAO.Clientes in 'Model\DAO\Lac.Model.DAO.Clientes.pas',
+  Lac.Controller.Clientes in 'Controllers\Lac.Controller.Clientes.pas',
+  Lac.Router.Clientes in 'Routers\Lac.Router.Clientes.pas';
 
 {$R *.res}
 

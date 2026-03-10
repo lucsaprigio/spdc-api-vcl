@@ -172,6 +172,10 @@
         <DCCReference Include="Model\DAO\Lac.Model.DAO.NotasSaida.pas"/>
         <DCCReference Include="Controllers\Lac.Controller.NFSaida.pas"/>
         <DCCReference Include="Routers\Lac.Router.NotasSaidas.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.Cliente.pas"/>
+        <DCCReference Include="Model\DAO\Lac.Model.DAO.Clientes.pas"/>
+        <DCCReference Include="Controllers\Lac.Controller.Clientes.pas"/>
+        <DCCReference Include="Routers\Lac.Router.Clientes.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
