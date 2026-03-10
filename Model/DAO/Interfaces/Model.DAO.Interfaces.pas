@@ -3,7 +3,7 @@ unit Model.DAO.Interfaces;
 interface
 
 uses
-  Model.Entity.NotasDestinadas,  Model.Entity.NotasDestinadasXML, Model.Entity.NFSaida;
+  Model.Entity.NotasDestinadas,  Model.Entity.NotasDestinadasXML, Model.Entity.NFSaida, Model.Entity.Cliente;
 
 type
   IDAONotasDestinadas = interface
@@ -24,6 +24,14 @@ type
     function ListarNFSaida(aBusinessId : String; aNumero: String = '';
                             aSerie :String = ''; aModelo: String = '';
                             aCpfCnpj : String = '') : TArray<TNotasSaida>;
+  end;
+
+  iDAOCliente = interface
+    ['{6CF564FB-1FA3-4FF9-9D38-31316F380AD8}']
+    procedure SalvarCliente(aCliente : TCliente);
+    procedure AtualizarCliente(aCliente: TCliente);
+    function BuscarCliente(aBusinessId: String; aIdCliente: String = ''; aCpfCnpj: String = ''): TCliente;
+    function ListarClientes(aBusinessId: String; aNome: String = ''; aCpfCnpj: String = ''; aPessoa: String = ''; aAtivo: String = ''): TArray<TCliente>;
   end;
 
 implementation
