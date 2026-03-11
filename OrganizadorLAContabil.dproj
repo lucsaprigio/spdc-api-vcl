@@ -6,10 +6,10 @@
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
-        <ProjectName Condition="'$(ProjectName)'==''">OrganizadorSpeedContabil</ProjectName>
+        <ProjectName Condition="'$(ProjectName)'==''">OrganizadorLAContabil</ProjectName>
         <TargetedPlatforms>3</TargetedPlatforms>
         <AppType>Application</AppType>
-        <MainSource>OrganizadorSpeedContabil.dpr</MainSource>
+        <MainSource>OrganizadorLAContabil.dpr</MainSource>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -70,7 +70,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
-        <SanitizedProjectName>OrganizadorSpeedContabil</SanitizedProjectName>
+        <SanitizedProjectName>OrganizadorLAContabil</SanitizedProjectName>
         <DCC_UnitSearchPath>..\modules\.dcp;..\modules\.dcu;..\modules;..\modules\dataset-serialize\src;..\modules\horse\src;..\modules\delphi-jose-jwt\Source\Common;..\modules\delphi-jose-jwt\Source\JOSE;..\modules\delphi-jose-jwt\Source;..\modules\hashlib4pascal\HashLib\src\Base;..\modules\hashlib4pascal\HashLib\src\Checksum;..\modules\hashlib4pascal\HashLib\src\Crypto\Blake2BParams;..\modules\hashlib4pascal\HashLib\src\Crypto\Blake2SParams;..\modules\hashlib4pascal\HashLib\src\Crypto;..\modules\hashlib4pascal\HashLib\src\Hash128;..\modules\hashlib4pascal\HashLib\src\Hash32;..\modules\hashlib4pascal\HashLib\src\Hash64;..\modules\hashlib4pascal\HashLib\src\Include;..\modules\hashlib4pascal\HashLib\src\Interfaces;..\modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2BParams;..\modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2SParams;..\modules\hashlib4pascal\HashLib\src\KDF;..\modules\hashlib4pascal\HashLib\src\NullDigest;..\modules\hashlib4pascal\HashLib\src\Nullable;..\modules\hashlib4pascal\HashLib\src\Packages\FPC;..\modules\hashlib4pascal\HashLib\src\Utils;..\modules\hashlib4pascal\HashLib.Benchmark\src\Core;..\modules\hashlib4pascal\HashLib.Benchmark\src\Forms\FMX;..\modules\hashlib4pascal\HashLib.Tests\src;..\modules\horse-jwt\src;modules\.dcp;modules\.dcu;modules;modules\dataset-serialize\src;modules\delphi-jose-jwt\Source\Common;modules\delphi-jose-jwt\Source\JOSE;modules\delphi-jose-jwt\Source;modules\hashlib4pascal\HashLib\src\Base;modules\hashlib4pascal\HashLib\src\Checksum;modules\hashlib4pascal\HashLib\src\Crypto\Blake2BParams;modules\hashlib4pascal\HashLib\src\Crypto\Blake2SParams;modules\hashlib4pascal\HashLib\src\Crypto;modules\hashlib4pascal\HashLib\src\Hash128;modules\hashlib4pascal\HashLib\src\Hash32;modules\hashlib4pascal\HashLib\src\Hash64;modules\hashlib4pascal\HashLib\src\Include;modules\hashlib4pascal\HashLib\src\Interfaces;modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2BParams;modules\hashlib4pascal\HashLib\src\Interfaces\IBlake2SParams;modules\hashlib4pascal\HashLib\src\KDF;modules\hashlib4pascal\HashLib\src\NullDigest;modules\hashlib4pascal\HashLib\src\Nullable;modules\hashlib4pascal\HashLib\src\Packages\FPC;modules\hashlib4pascal\HashLib\src\Utils;modules\hashlib4pascal\HashLib.Benchmark\src\Core;modules\hashlib4pascal\HashLib.Benchmark\src\Forms\FMX;modules\hashlib4pascal\HashLib.Tests\src;modules\horse\src;modules\horse-jwt\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -176,6 +176,9 @@
         <DCCReference Include="Model\DAO\Lac.Model.DAO.Clientes.pas"/>
         <DCCReference Include="Controllers\Lac.Controller.Clientes.pas"/>
         <DCCReference Include="Routers\Lac.Router.Clientes.pas"/>
+        <DCCReference Include="Services\Lac.Services.ExportacaoXML.pas"/>
+        <DCCReference Include="Model\Entities\Model.Entity.NotasSaidaXML.pas"/>
+        <DCCReference Include="DTO\DTO.NFExportacaoXML.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -194,13 +197,13 @@
         <BorlandProject>
             <Delphi.Personality>
                 <Source>
-                    <Source Name="MainSource">OrganizadorSpeedContabil.dpr</Source>
+                    <Source Name="MainSource">OrganizadorLAContabil.dpr</Source>
                 </Source>
             </Delphi.Personality>
             <Deployment Version="5">
-                <DeployFile LocalName="Win32\Debug\OrganizadorSpeedContabil.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="Win32\Debug\OrganizadorLAContabil.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>OrganizadorSpeedContabil.exe</RemoteName>
+                        <RemoteName>OrganizadorLAContabil.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -1,4 +1,4 @@
-program OrganizadorSpeedContabil;
+program OrganizadorLAContabil;
 
 uses
   Vcl.Forms,
@@ -7,10 +7,12 @@ uses
   Spdc.Router.Usuario in 'Routers\Spdc.Router.Usuario.pas',
   Spdc.Utils.Configuracao in 'Utils\Spdc.Utils.Configuracao.pas',
   Spdc.Controller.Auth in 'Controllers\Spdc.Controller.Auth.pas',
+
   Spdc.Router.Auth in 'Routers\Spdc.Router.Auth.pas' {$R *.res},
   Spdc.Infra.Connection in 'Infra\Spdc.Infra.Connection.pas',
   Infra.HorseServer in 'Infra\Infra.HorseServer.pas',
   Spdc.UserAuth.Response in 'DTO\Spdc.UserAuth.Response.pas',
+
   Lac.Schema.ScriptExecute in 'Schemas\Lac.Schema.ScriptExecute.pas' {$R *.res},
   Spdc.Model.DAO.Usuario in 'Model\DAO\Spdc.Model.DAO.Usuario.pas',
   Model.Entity.Usuario in 'Model\Entities\Model.Entity.Usuario.pas',
@@ -44,7 +46,10 @@ uses
   Model.Entity.Cliente in 'Model\Entities\Model.Entity.Cliente.pas',
   Lac.Model.DAO.Clientes in 'Model\DAO\Lac.Model.DAO.Clientes.pas',
   Lac.Controller.Clientes in 'Controllers\Lac.Controller.Clientes.pas',
-  Lac.Router.Clientes in 'Routers\Lac.Router.Clientes.pas';
+  Lac.Router.Clientes in 'Routers\Lac.Router.Clientes.pas',
+  Lac.Services.ExportacaoXML in 'Services\Lac.Services.ExportacaoXML.pas',
+  Model.Entity.NotasSaidaXML in 'Model\Entities\Model.Entity.NotasSaidaXML.pas',
+  DTO.NFExportacaoXML in 'DTO\DTO.NFExportacaoXML.pas';
 
 {$R *.res}
 

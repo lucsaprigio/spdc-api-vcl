@@ -24,6 +24,7 @@ TNotasSaida = class
     FBaseSt : Double;
     FValorSt : Double;
     FObsNf : WideString;
+    FModelo: Integer;
 
     // Assinaturas dos Getters e Setters
     function GetId: string;
@@ -43,6 +44,8 @@ TNotasSaida = class
 
     function GetObsNf: WideString;
     procedure SetObsNf(const Value: WideString);
+
+    procedure SetModelo(const Value: Integer);
 
   public
     constructor Create(const aId : String = '');
@@ -64,6 +67,7 @@ TNotasSaida = class
     property BaseSt: Double read GetBaseSt write SetBaseSt;
     property ValorSt: Double read GetValorSt write SetValorSt;
     property ObsNf: WideString read GetObsNf write SetObsNf;
+    property Modelo: Integer read FModelo write SetModelo;
   end;
 
 implementation
@@ -128,6 +132,11 @@ begin
   end;
 
     FId := Value.Replace('{', '').Replace('}', '');
+end;
+
+procedure TNotasSaida.SetModelo(const Value: Integer);
+begin
+  FModelo := Value;
 end;
 
 procedure TNotasSaida.SetObsNf(const Value: WideString);

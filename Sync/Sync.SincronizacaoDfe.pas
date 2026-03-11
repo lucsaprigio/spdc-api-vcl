@@ -3,7 +3,8 @@ unit Sync.SincronizacaoDfe;
 interface
 
 uses
-  System.Classes, Sync.Interfaces, System.SysUtils, Model.Entity.Empresa, Lac.Model.DAO.Empresa;
+  System.Classes, Sync.Interfaces, System.SysUtils, Model.Entity.Empresa, Lac.Model.DAO.Empresa,
+  Winapi.ActiveX;
 
 type
   TWorkerSincronizacaoDFe = class(TInterfacedObject, ISyncJob)
@@ -30,19 +31,26 @@ begin
     FThread := TThread.CreateAnonymousThread(
       procedure
       begin
+
+        CoInitialize(nil);
+        try
         while not TThread.CheckTerminated do
         begin
           try
              ProcessarEmpresas;
           except on E: Exception do
-            // Gravar no Log
+            raise Exception.Create('Ocorreu um Erro!' + E.Message);
           end;
 
           {$IFDEF RELEASE}
-            TThread.Sleep(10 * 10 * 1000); // 10 Minutos
+            TThread.Sleep(10 * 60 * 1000); // 10 Minutos
           {$ELSE}
-            TThread.Sleep(30 * 30 * 1000); // 30 segundos
+            TThread.Sleep(5000); // 5 segundos
           {$ENDIF}
+
+        end;
+        finally
+         CoUninitialize;
         end;
       end
     );
@@ -85,7 +93,7 @@ begin
     begin
       try
         try
-          lService.SincronizarSefaz(lEmpresa.BusinessId, lEmpresa.Cnpj);
+          lService.SincronizarSefaz(lEmpresa.BusinessId, lEmpresa.Cnpj, lEmpresa.LastNSU);
         except on E: Exception do
         begin
           // Colocar um LOG depois

@@ -3,7 +3,7 @@ unit Model.DAO.Interfaces;
 interface
 
 uses
-  Model.Entity.NotasDestinadas,  Model.Entity.NotasDestinadasXML, Model.Entity.NFSaida, Model.Entity.Cliente;
+  Model.Entity.NotasDestinadas,  Model.Entity.NotasDestinadasXML, Model.Entity.NFSaida, Model.Entity.Cliente, Model.Entity.NotasSaidaXML, DTO.NFExportacaoXML;
 
 type
   IDAONotasDestinadas = interface
@@ -24,6 +24,7 @@ type
     function ListarNFSaida(aBusinessId : String; aNumero: String = '';
                             aSerie :String = ''; aModelo: String = '';
                             aCpfCnpj : String = '') : TArray<TNotasSaida>;
+    function BuscarXMLExportacao(aBusinessId: string; aDataIni, aDataFim: TDateTime): TArray<TNFExportacaoDTO>;
   end;
 
   iDAOCliente = interface
@@ -32,6 +33,11 @@ type
     procedure AtualizarCliente(aCliente: TCliente);
     function BuscarCliente(aBusinessId: String; aIdCliente: String = ''; aCpfCnpj: String = ''): TCliente;
     function ListarClientes(aBusinessId: String; aNome: String = ''; aCpfCnpj: String = ''; aPessoa: String = ''; aAtivo: String = ''): TArray<TCliente>;
+  end;
+
+  iDAONFSaidaXML = interface
+    ['{425B5FB9-2D30-4CB7-85B6-419CD7145479}']
+     procedure SalvarNFXML(aNotaId: string; aXmlConteudo : WideString);
   end;
 
 implementation

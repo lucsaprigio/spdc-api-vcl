@@ -4,7 +4,7 @@ interface
 
 uses
   Model.DAO.Interfaces, Model.Entity.NFSaida, Spdc.Infra.Connection,
-  FireDAC.Comp.Client, System.SysUtils;
+  FireDAC.Comp.Client, System.SysUtils, DTO.NFExportacaoXML;
 
 type
   TDAONFeSaida = class(TInterfacedObject, IDAONFSaida)
@@ -21,11 +21,14 @@ type
       function  ListarNFSaida(aBusinessId : String; aNumero: String = '';
                               aSerie :String = ''; aModelo: String = '';
                               aCpfCnpj : String = '') : TArray<TNotasSaida>;
+      function BuscarXMLExportacao(aBusinessId: string; aDataIni, aDataFim: TDateTime): TArray<TNFExportacaoDTO>;
   end;
 
 implementation
 
 { TDAONFeSaida }
+
+
 
 constructor TDAONFeSaida.Create(aConexao : IControllerConnection);
 begin
@@ -208,6 +211,49 @@ begin
     lQry.ParamByName('OBS_NF').AsWideString   := aNF.ObsNf;
 
     lQry.ExecSQL;
+
+  finally
+    lQry.Free;
+  end;
+
+end;
+
+function TDAONFeSaida.BuscarXMLExportacao(aBusinessId: string; aDataIni,
+  aDataFim: TDateTime): TArray<TNFExportacaoDTO>;
+var
+  lQry: TFDQuery;
+  lDTO : TNFExportacaoDTO;
+begin
+  Result := nil;
+  lQry := TFDQuery.Create(nil);
+
+  try
+    lQry.Connection := FConexao.GetConnection;
+
+    lQry.SQL.Text := ' SELECT S.CHAVE_ACESSO, S.MODELO, X.XML_CONTEUDO' +
+                    ' FROM TB_NOTAS_SAIDA AS S ' +
+                    ' INNER JOIN TB_NOTAS_SAIDA_XML X ON S.ID = X.SAIDA_ID' +
+                    ' WHERE S.DATA_EMISSAO BETWEEN :DATAINI AND :DATAFIM' +
+                    ' AND S.BUSINESS_ID = :BUSINESS_ID';
+
+  lQry.ParamByName('BUSINESS_ID').AsString := aBusinessId;
+  lQry.ParamByName('DATAINI').AsDateTime := aDataIni;
+  lQry.ParamByName('DATAFIM').AsDateTime := aDataFim;
+
+  lQry.Open;
+
+  while not lQry.Eof do
+  begin
+    lDTO := TNFExportacaoDTO.Create;
+
+    lDTO.Chave       := lQry.FieldByName('CHAVE_ACESSO').AsString;
+    lDTO.Modelo      := lQry.FieldByName('MODELO').AsString;
+    lDTO.XmlConteudo := lQry.FieldByName('XML_CONTEUDO').asWideString;
+
+    SetLength(Result, Length(Result) + 1);
+    Result[High(Result)] := lDTO;
+  end;
+
 
   finally
     lQry.Free;

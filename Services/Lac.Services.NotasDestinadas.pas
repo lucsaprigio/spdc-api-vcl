@@ -10,7 +10,7 @@ uses
 type
   TServiceNotasDestinadas = class
   public
-    procedure SincronizarSefaz(const aBusinessId: string; aCnpj: string);
+    procedure SincronizarSefaz(const aBusinessId: string; aCnpj: string; aUltNSU : String = '');
   end;
 
 implementation
@@ -20,7 +20,7 @@ uses
 
 { TServiceNotasDestinadas }
 
-procedure TServiceNotasDestinadas.SincronizarSefaz(const aBusinessId: string; aCnpj: string);
+procedure TServiceNotasDestinadas.SincronizarSefaz(const aBusinessId: string; aCnpj: string; aUltNSU: string);
 var
   LNFe: TACBrNFe;
   LUltimoNSU, lMaxNSURetorno, lUltNSURetorno: string;
@@ -33,7 +33,6 @@ var
 
   LNotasDestinadasXML : TNotasDestinadasXML;
   LNotasDestinadas: TNotasDestinadas;
-
 begin
 
   LNFe := TLacFactoryAcbr.New.ConfigurarACBrNFe(aBusinessId);
@@ -46,6 +45,9 @@ begin
 
   LDAONotasDestinadas    := TDAOLacNotasDestinadas.New(LConexao);
   LDAONotasDestinadasXML := TDAONotasDestinadasXML.New(LConexao);
+
+  if aUltNSU <> '' then
+    LUltimoNSU := aUltNSU;
 
   LDAOEmpresa            := TDAOEmpresa.Create;
 
@@ -119,7 +121,7 @@ begin
        until (StrToIntDef(lUltNSURetorno, 0) >= (StrToIntDef(lMaxNSURetorno, 0 )))
              or (LNFe.WebServices.DistribuicaoDFe.retDistDFeInt.CStat <> 138);
 
-       LDAOEmpresa.AtualizarUltimoNSU(aBusinessId, aCnpj, LUltimoNSU);
+       LDAOEmpresa.AtualizarUltimoNSU(aBusinessId, LUltimoNSU, aCnpj );
   finally
     LNFe.Free;
   end;
